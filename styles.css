@@ -1,20 +1,56 @@
 body {
-    background-color: blue;
+    background-color: rgb(44, 44, 44);
 }
 
-img {
+#profilePic {
+    position: relative;
+    top: 5px;
+    bottom: 5px;
     width: 20%;
     height: 20%;
+    border-radius: 10%;
+}
+
+p {
+    color: white;
+    position: relative;
+    top: 5px;
+    font-size: larger;
 }
 
 footer {
-    color: aqua;
+    color: white;
+    text-decoration: underline;
 }
 
-h1 {
+#header {
     color: white;
+    position: relative;
+    top: 5px;
+    left: 5px;
 }
 
 a {
     color: white;
+}
+
+#icon {
+    position: relative;
+    width: 4%;
+    height: 4%;
+    bottom: 3px;
+}
+
+#linkTitle {
+    font-size: large;
+}
+
+a {
+    color: rgb(87, 161, 185);
+    text-decoration: underline;
+}
+
+#gitubIcon, #linkedinIcon, #emailIcon {
+    width: 4%;
+    background-color: aliceblue;
 }

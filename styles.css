@@ -14,13 +14,16 @@ body {
 p {
     color: white;
     position: relative;
-    top: 5px;
+    top: 20px;
+    left: 5px;
     font-size: larger;
 }
 
 footer {
     color: white;
-    text-decoration: underline;
+    position: relative;
+    top: 30px;
+    left: 5px;
 }
 
 #header {
@@ -28,10 +31,6 @@ footer {
     position: relative;
     top: 5px;
     left: 5px;
-}
-
-a {
-    color: white;
 }
 
 #icon {
@@ -43,14 +42,24 @@ a {
 
 #linkTitle {
     font-size: large;
+    text-decoration: underline;
 }
 
 a {
     color: rgb(87, 161, 185);
     text-decoration: underline;
+    
 }
 
 #gitubIcon, #linkedinIcon, #emailIcon {
     width: 4%;
     background-color: aliceblue;
+}
+
+#scratch {
+    text-decoration: none;
+    font-size: smaller;
+    text-align: center;
+    position: relative;
+    top: 100px;
 }

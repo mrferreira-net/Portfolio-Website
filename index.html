@@ -28,41 +28,70 @@
 
     <body>
         <h1 id="header">
-            <img alt="icon" src="Docs/icon.png" id="icon">
             Welcome to my Portfolio Website!
         </h1>
 
-        <img alt="Profile picture" src="Docs/5vktp1adsfas7.jpg" id="profilePic">
+        <a href="https://mr-ferreira.com">
+            <img alt="siteIcon" src="Docs/icon.png" id="siteIcon">
+        </a>
 
-        <p>My name is Matheus Ferreira, I am a second year Computer Science student and I am pursuing a degree in Computer 
-            Science, with an interest in Big Data and Algorithms.
-        </p>
+        <div id="intro" class="center">
+            <img alt="Profile picture" src="Docs/5vktp1adsfas7.jpg" id="profilePic">
+            <div id="introText">
+                My name is Matheus Ferreira, I am a second year Computer Science student and I am pursuing a degree in Computer 
+                Science, with an interest in Big Data and Algorithms.
+            </div>
+        </div>
+        <br>
 
-        <footer>
-            <div id="linkTitle">
+        <div class="customBorder">
+            <div class="decorate">
+                About me:
+            </div>
+            I love learning and talking about science, mathematics, and philosophy! 
+            <br>
+            I am an eventual UF transfer student, currently attending HCC in Tampa while I complete my Computer Science AA track. 
+        </div>
+        <br>
+
+        <div class="customBorder">
+            <div class="decorate">
+                Here are some of my cool mini-projects:
+            </div>
+            <a href="calc/calc.html">Calculator made from scratch</a>
+            <br>
+            <a href="2dgame/2dgame.html">2D browser game</a>
+            <br>
+            <a href="weatherapp/Weatherapp.html">Weather app</a>
+        </div>
+
+
+        
+        <div id="linksTable">
+            <hr id="bottomPageLine">
+            <div class="decorate">
                 Here are my links:
             </div>
-            <div>
-                <a href="https://github.com/Mr-Ferreira">
-                    <img alt="gitubIcon" src="Docs/githubicon.png" id="gitubIcon">
+
+            <div id="links">
+                <a href="https://github.com/Mr-Ferreira" id="githubLink">
+                    <img alt="githubIcon" src="Docs/githubicon.png" id="githubIcon">
                     GitHub
                 </a>
-            </div>
-            <div>
-                <a href="https://linkedin.com/in/mattferreira1">
+                <a href="https://linkedin.com/in/mattferreira1" id="linkedinLink">
                     <img alt="linkedinIcon" src="Docs/linkedinicon.png" id="linkedinIcon">
                     LinkedIn
                 </a>
-            </div>
-            <div>
-                <a href="mailto: mathew.r.ferreira@gmail.com">
+                <a href="mailto: mathew.r.ferreira@gmail.com" id="emailLink">
                     <img alt="emailIcon" src="Docs/email icon.png" id="emailIcon">
                     Email
                 </a>
             </div>
+            <br> 
+
             <div id="scratch">
                 This website is a work in progress and was made from scratch!
             </div>
-        </footer>
+        </div>
     </body>
 </html>

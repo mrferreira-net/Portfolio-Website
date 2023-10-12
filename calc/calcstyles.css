@@ -1,0 +1,29 @@
+body {
+    padding: 10px;
+}
+
+td {
+    border: 1px solid black;
+}
+
+table {
+    padding: 10px;
+    position: relative;
+    left: 5px;
+}
+
+button {
+    width: 30px;
+    border: none;
+}
+
+form {
+    border: 2px solid black;
+    width: 17%;
+    padding: 10px;
+
+}
+
+input {
+    bottom: 10px;
+}

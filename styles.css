@@ -57,6 +57,7 @@ a {
     border-top: 1px solid rgb(78, 78, 78);
 }
 #linksTable {
+    background-color: rgb(44, 44, 44);
     position: fixed;
     bottom: 0;
     width: 100%;

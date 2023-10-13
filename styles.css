@@ -26,31 +26,37 @@ a {
 /*--------------------------------------------------------------------------------------*/
 #siteIcon {
     position: relative;
-    width: 40px;
+    bottom: 33px;
+    right: 10px;
+    width: 50px;
 }
 #header {
-    position: fixed;
-    top: 0;
-    margin-left: auto;
+    position: relative;
+    font-size: 60px;
+    right: 40px;
     width: 100%;
     text-align: center;
 }
 /*--------------------------------------------------------------------------------------*/
 #profilePic {
     position: relative;
-    width: 200px;
     border-radius: 10%;
+    max-width: 200px;
 }
 #intro {
     display: flex;
     align-items: center;
     position: relative;
+    text-align: center;
+    width: 100%;
     top: 20px;
 }
 #introText {
     position: relative;
     font-size: larger;
     padding-left: 20px;
+    width: 100%;
+    padding-right: 20px;
 }
 /*--------------------------------------------------------------------------------------*/
 #bottomPageLine {
@@ -58,7 +64,6 @@ a {
 }
 #linksTable {
     background-color: rgb(44, 44, 44);
-    position: fixed;
     bottom: 0;
     width: 100%;
     text-align: center;

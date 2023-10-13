@@ -1,29 +1,41 @@
 body {
     padding: 10px;
+    background-color: rgb(197, 233, 197);
 }
 
-td {
-    border: 1px solid black;
+.customBorder {
+    border: 2px solid rgb(0, 0, 0);
+    padding: 10px
 }
 
 table {
     padding: 10px;
     position: relative;
-    left: 5px;
 }
 
 button {
-    width: 30px;
+    width: 70px;
+    height: 70px;
     border: none;
+    font-size: x-large;
 }
 
-form {
-    border: 2px solid black;
-    width: 17%;
-    padding: 10px;
-
+#calc {
+    position: relative;
+    text-align: center;
+    width: 320px;
 }
 
 input {
     bottom: 10px;
+    width: 270px;
+    height: 30px;
+    font-size: x-large;
+}
+
+#footnote {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
 }

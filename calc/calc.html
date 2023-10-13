@@ -11,103 +11,106 @@
     </head>
     <body>
         <form action="">
-            <input type="text" id="display" onkeyup="read(event)" placeholder="0">
-            <table>
-                <tr>
-                    <td>
-                        <button type="button" onclick="read(event)">C</button>
-                    </td>
+            <div class="customBorder" id="calc">
+                <input type="text" id="display" placeholder="0">
+                <table>
+                    <tr>
+                        <td>
+                            <button type="button" onclick="read(event)">C</button>
+                        </td>
+                            
+                        <td>
+                            <button type="button" onclick="read(event)">( )</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">%</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">/</button>
+                        </td>
+                    </tr>
                         
-                    <td>
-                        <button type="button" onclick="read(event)">( )</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">%</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">&divide</button>
-                    </td>
-                </tr>
-                    
-                <tr>
-                    <td>
-                        <button type="button" onclick="read(event)">7</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">8</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">9</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">x</button>
-                    </td>
-                </tr>
-    
-                <tr>
-                    <td>
-                        <button type="button" onclick="read(event)">4</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">5</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">6</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">-</button>
-                    </td>
-                </tr>
-    
-                <tr>
-                    <td>
-                        <button type="button" onclick="read(event)">1</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">2</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">3</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">+</button>
-                    </td>
-                </tr>
-    
-                <tr>
-                    <td>
-                        <button type="button" onclick="read(event)">+/-</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">0</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">.</button>
-                    </td>
-    
-                    <td>
-                        <button type="button" onclick="read(event)">=</button>
-                    </td>
-                </tr>
-            </table>
+                    <tr>
+                        <td>
+                            <button type="button" onclick="read(event)">7</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">8</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">9</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">x</button>
+                        </td>
+                    </tr>
+        
+                    <tr>
+                        <td>
+                            <button type="button" onclick="read(event)">4</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">5</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">6</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">-</button>
+                        </td>
+                    </tr>
+        
+                    <tr>
+                        <td>
+                            <button type="button" onclick="read(event)">1</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">2</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">3</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">+</button>
+                        </td>
+                    </tr>
+        
+                    <tr>
+                        <td>
+                            <button type="button" onclick="read(event)">+/-</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">0</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">.</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">=</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
         </form>
         <br>
         <br>
 
-        <div>
+        <div id="footnote">
             Made by Matheus Ferreira
         </div>
     </body>

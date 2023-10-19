@@ -12,7 +12,10 @@
     <body>
         <form action="">
             <div class="customBorder" id="calc">
-                <input type="text" id="display" placeholder="0">
+                <div id="displayAndBackspace">
+                    <input type="text" placeholder="0" readonly id="display">
+                    <button type="button" onclick="read(event)" id="backspace">⌫</button>
+                </div>
                 <table>
                     <tr>
                         <td>

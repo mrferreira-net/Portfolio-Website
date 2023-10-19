@@ -1,24 +1,55 @@
 let formula = "";
-let mathValues = [""];
-let mathValuesIndex = 0;
-let operators = [""];
-let operatorsIndex = 0;
+let parsedFormula = [""];
+let parsedFormulaIndex = 0;
 let length = 0;
+let lastId = -1;
 
 function read(event) {
-    length = formula.length;
     let trigger = event.srcElement.innerHTML;
-    formula = document.querySelector('#display').value;
+    formula = document.querySelector('input').value;
 
-    if (trigger == "C") {
-        formula = "";
-        mathValues = [""];
-        mathValuesIndex = 0;
-        operators = [""];
-        operatorsIndex = 0;
-    }     
+    if (trigger == "C") 
+        reset(); 
+    else if (trigger == "⌫") 
+        formula = formula.slice(0, (length - 1));
+    else if (trigger == "+/-") {
+        if (length == 0)
+            formula = "(-";
+        else {
+            for (let i = length - 1; i >= 0; i--) {
+                if (typeId(formula[i]) == 1 && i > 0) 
+                    continue;
+                else if (typeId(formula[i]) == 1)
+                    formula = "(-" + formula;
+                else if (i == (length - 1)){
+                    if (formula[i] == ")") 
+                        formula = formula + "x(-";
+                    else if (formula[i] == "-" && i > 0) {
+                        if (formula[i - 1] == "(")
+                            formula = formula.slice(0, (i - 1));
+                        else
+                            formula = formula + "(-";
+                    }
+                    else
+                        formula = formula + "(-";
+                }
+                else if (formula[i] == "-" && i > 0) {
+                    if (formula[i - 1] == "(")
+                        formula = formula.slice(0, (i - 1)) + formula.slice(i + 1);
+                    else
+                        formula = formula.slice(0, (i + 1)) + "(-" + formula.slice(i + 1);
+                }
+                else
+                    formula = formula.slice(0, (i + 1)) + "(-" + formula.slice(i + 1);
+                break;
+            }
+        }
+    }
+    else if (trigger == "=") {
+        parse();
+        calculate();
+    }
     else if (trigger == "( )") {
-        let length = formula.length;
         let sumLeft = 0;
         let sumRight = 0;
 
@@ -28,108 +59,147 @@ function read(event) {
             else if (formula[i] == ")")
                 sumRight++;    
         }
-        
-        if ((sumLeft - sumRight) == 1)
-            formula = formula + ")";
-        else
+
+        if (length == 0) 
+            formula = "(";
+        else if (lastId != 0 && sumLeft == sumRight)
+            formula = formula + "x(";
+        else if (lastId == 0 && sumLeft == sumRight)
             formula = formula + "(";
-    }
-    else if (trigger == "+/-") {
-        let closed = false;
-        for (let i = length - 1; i >= 0; i--) {
-            let code = formula[i].charCodeAt(0);
-
-            if (i == 0 && formula[i] != "-") {
-                if (formula[i] == "+")
-                    formula = "-" + formula.slice(i+1)
-                else if (formula[i] == "(" && closed == false)
-                    formula = "-" + formula.slice(i + 1);
-                else
-                    formula = "-" + formula;
-            }
-            else if (!(code >= 48 && code <= 57)) {
-                if (formula[i] == ")" && i != (length - 1)) {
-                    formula = formula.slice(0, (i + 1)) + "-" + formula.slice(i + 1);
-                    closed = true;
-                }  
-                else if (formula[i] == ")" && i == (length - 1)) {
-                    closed = true;
-                    continue;
-                }
-
-                else if (formula[i] == "(" && closed == false && i != (length - 1)) 
-                    formula = formula.slice(0, (i + 1)) + "-" + formula.slice(i + 1);
-                else if (formula[i] == "(" && closed == false && i == (length - 1)) 
-                    formula = formula + "-";
-                else if (formula[i] == "(" && closed == true) 
-                    closed = false;
-                
-    
-                else if (formula[i] == "-" && i != (length - 1) && closed == false) 
-                    formula = formula.slice(0, i) + formula.slice(i + 1);
-                else if (formula[i] == "-" && i == (length - 1) && closed == false) 
-                    formula = formula.slice(0, i);
-
-                else if (formula[i] == "+" && i != (length - 1) && closed == false) 
-                    formula = formula.slice(0, i) + "-" + formula.slice(i + 1);
-                else if (formula[i] == "+" && i == (length - 1) && closed == false) 
-                    formula = formula.slice(0, i) + "-";
-                else
-                    continue;
-                break;
-            }  
+        else if (lastId == 1)
+            formula = formula + ")";
+        else if (lastId == -1) {
+            if (formula[length - 1] == ")")
+                formula = formula + ")";
+            else
+                formula = formula + "(";
         }
+        else if (lastId == 0) {
+            formula = formula + "(";
+        }  
     }
-    else if (trigger == "=") {
-        parse();
-        calculate();
+    else if (trigger == "%") {
+        if (length != 0 && lastId != 0 && formula[length - 1] != "%" && formula[length - 1] != "(")
+            formula = formula + "%";
+    }
+    else if (trigger == ".") {
+        if (lastId == 1) {
+            for (let i = length - 1; i >= 0; i--) {
+                if (formula[i] == ".")
+                    break;
+                else if (typeId(formula[i]) == 1 && i == 0)
+                    formula = formula + ".";
+                else if (typeId(formula[i]) == 1)
+                    continue;
+                else {
+                    formula = formula + ".";
+                    break;
+                }
+            }
+        }
+        else if (formula[length - 1] == ")")
+            formula = formula + "x0.";
+        else if (formula[length - 1] != ".")
+            formula = formula + "0.";
+    }
+    else if (typeId(trigger) == 0) {
+        if (lastId == -1 && formula[length - 1] != ")") {
+            formula = formula;
+            if (lastId == -1 && length > 0 && (trigger == "+" || trigger == "-"))
+                formula = formula + trigger;
+        }
+        else if (lastId == 0 && typeId(trigger) == 0) {
+            if ((trigger == "+" || trigger == "-") && formula[length - 2] == "(")
+                formula = formula.slice(0, (length - 1)) + trigger;
+            else if ((trigger == "/" || trigger == "x") && formula[length - 2] == "(")
+                formula = formula.slice(0, (length - 1));
+            else
+            formula = formula.slice(0, (length - 1)) + trigger;
+        }
+        else 
+            formula = formula + trigger
     }
     else 
         formula = formula + trigger;
-    document.querySelector('#display').value = formula;
+    
+    length = formula.length;
+    lastId = typeId(formula[length - 1]);
+    document.querySelector('input').value = formula;
 }
+
+//-------------------------------NON-MAIN FUNCTIONS-------------------------------
 
 // Parses the formula to be later solved.
 function parse () {
     for (let i = 0; i < length; i++) {
         let buffer = formula[i];
-        let code = buffer.charCodeAt(0);
-        if ((code >= 48 && code <= 57)) 
-            mathValues[mathValuesIndex] = mathValues[mathValuesIndex] + buffer;
+        if (typeId(buffer) == 1) 
+            parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex] + buffer;
         else {
-            if (buffer == "x" || buffer == "X" || buffer == "*")
-                operators[operatorsIndex] = "*";
+            parsedFormula.push("");
+            parsedFormulaIndex++;
+            if (buffer == "x")
+                parsedFormula[parsedFormulaIndex] = "*";
             else if (buffer == "+") 
-                operators[operatorsIndex] = "+";
+                parsedFormula[parsedFormulaIndex] = "+";
             else if (buffer == "-") 
-                operators[operatorsIndex] = "-";
+                parsedFoparsedFormula[parsedFormulaIndex] = "-";
             else if (buffer == "/") 
-                operators[operatorsIndex] = "/";
-            else if (buffer == "%") 
-                operators[operatorsIndex] = "%";
+                parsedFoparsedFormula[parsedFormulaIndex] = "/";
+            else if (buffer == "%") {
+                parsedFoparsedFormula[parsedFormulaIndex] = "/";
+                parsedFormula.push("");
+                parsedFormulaIndex++;
+                parsedFoparsedFormula[parsedFormulaIndex] = "100";
+            }   
             else if (buffer == ".") 
-                operators[operatorsIndex] = ".";
+                parsedFoparsedFormula[parsedFormulaIndex] = ".";
             else if (buffer == "(") 
-                operators[operatorsIndex] = ")";  
+                parsedFoparsedFormula[parsedFormulaIndex] = ")";  
             else if (buffer == ")") 
-                operators[operatorsIndex] = "("; 
+                parsedFoparsedFormula[parsedFormulaIndex] = "("; 
             else {
-                formula = "ERROR"
-                mathValues = [""];
-                mathValuesIndex = 0;
-                operators = [""];
-                operatorsIndex = 0;
+                reset();
                 break;
             }
-            operators.push("");
-            operatorsIndexIndex++;
-            mathValues.push("");
-            mathValuesIndex++;
+            parsedFormula.push("");
+            parsedFormulaIndex++;
         } 
     }
 }
 
 // Calculates the formula based on parse
 function calculate () {
+    
+}
 
+// Returns 0 if value is a mathematical operator 1 if it's a number and -1 if it's neither.
+function typeId (value) {
+    if (value != undefined){
+        let code = value.charCodeAt(0);
+        if (value.length > 1)
+            return lastId;
+        if ((code >= 48 && code <= 57) || value == "%" || value == ".")
+            return 1;
+        else {
+            let operators = ["x", "+", "-", "/",]
+            let operatorsLen = operators.length;
+            for (let i = 0; i < operatorsLen; i++) {
+                if (value == operators[i])
+                    return 0;
+            }
+            return -1;
+        }
+    }
+    else
+        return lastId;
+}
+
+// Resets the calculator
+function reset () {
+    formula = "";
+    parsedFormula = [""];
+    parsedFormulaIndex = 0;
+    length = 0;
+    lastId = -1;
 }

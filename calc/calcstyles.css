@@ -23,7 +23,7 @@ button {
 #calc {
     position: relative;
     text-align: center;
-    width: 320px;
+    width: 330px;
 }
 
 input {
@@ -38,4 +38,19 @@ input {
     bottom: 0;
     width: 100%;
     text-align: center;
+}
+
+#displayAndBackspace {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+#backspace {
+    position: relative;
+    left: 10px;
+    width: 40px;
+    height: 40px;
+    font-size:medium;
 }

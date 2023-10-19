@@ -24,16 +24,16 @@ a {
     padding: 10px
 }
 /*--------------------------------------------------------------------------------------*/
+#headerContainer {
+    display: flex;
+}
 #siteIcon {
     position: relative;
-    bottom: 33px;
-    right: 10px;
     width: 50px;
 }
 #header {
     position: relative;
     font-size: 60px;
-    right: 40px;
     width: 100%;
     text-align: center;
 }

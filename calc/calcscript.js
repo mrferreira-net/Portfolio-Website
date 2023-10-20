@@ -175,6 +175,7 @@ function parse () {
             }
         } 
     }
+    // ------------- CAUSING ISSUES V
     let parsedFormulaLen = parsedFormula.length;
     for (let i = 0; i < parsedFormulaLen; i++) {
         parsedFormulaLen = parsedFormula.length;
@@ -187,6 +188,18 @@ function parse () {
             i++; 
         }
     }
+    // ---------------
+    let sumLeft = 0;
+    let sumRight = 0;
+    parsedFormulaLen = parsedFormula.length;
+    for (let i = 0; i < parsedFormulaLen; i++) {
+        if (parsedFormula[i] == "(")
+            sumLeft++;
+        else if (parsedFormula[i] == ")")
+            sumRight++;    
+    }
+    if (sumLeft > sumRight)
+        parsedFormula.push(")");
 }
 
 // Calculates the formula based on parsedFormula.

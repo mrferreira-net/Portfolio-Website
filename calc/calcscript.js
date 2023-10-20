@@ -175,17 +175,18 @@ function parse () {
             }
         } 
     }
-    let sumLeft = 0;
-    let sumRight = 0;
-    parsedFormulaLen = parsedFormula.length;
+    let parsedFormulaLen = parsedFormula.length;
     for (let i = 0; i < parsedFormulaLen; i++) {
-        if (parsedFormula[i] == "(")
-            sumLeft++;
-        else if (parsedFormula[i] == ")")
-            sumRight++;    
+        parsedFormulaLen = parsedFormula.length;
+        if (parsedFormula[i] == "/" && parsedFormula[i - 1] != ")") {
+            parsedFormula.splice((i - 1), 0, "(");
+            if (i < (parsedFormulaLen - 2)) 
+                parsedFormula.splice((i + 3), 0, ")");
+            else 
+                parsedFormula.push(")");
+            i++; 
+        }
     }
-    if (sumLeft > sumRight)
-        parsedFormula.push(")");
 }
 
 // Calculates the formula based on parsedFormula.
@@ -195,23 +196,28 @@ function calculate (formula) {
     let calculation = 0;
     
     // Solve parentheses using recursion.
-    formula = solveParentheses(formula);
-    
-    // Fixes any remaining parentheses.
-    for (let i = 0; i < formula; i++) {
-        formula = formula.length;
-        if (formula[i] == "/" && formula[i - 1] != ")") {
-            formula.splice((i - 1), 0, "(");
-            if (i < (formula - 2)) 
-                formula.splice((i + 3), 0, ")");
-            else 
-                formula.push(")");
-            i++; 
+    let parenthesesSize = 0;
+    for (let i = 0; i < formulaLen; i++) {
+        if (formula[i] == "(") {
+            let openCount = 1;
+            let closedCount = 0;
+            for (let j = i + 1; j < formulaLen; j++) {
+                if (formula[j] == "(")
+                    openCount++;
+                else if (formula[j] == ")")
+                    closedCount++;
+                if (openCount == closedCount)  {
+                    parenthesesSize = (j - i) + 1;
+                    let localCalc = 0;
+                    localCalc = calculate(formula.slice((i + 1), j));
+                    localCalc = localCalc.toString();
+                    formula.splice(i, parenthesesSize, localCalc);
+                    formulaLen = formula.length;
+                    break;
+                }
+            }
         }
     }
-
-    // Solve remaining parentheses using recursion.
-    formula = solveParentheses(formula);
 
     // Solve multiplications and divisions.
     for (let i = 0; i < formulaLen; i++) {
@@ -288,31 +294,4 @@ function next (){
         parsedFormula.push("");
         parsedFormulaIndex++;
     }
-}
-
-function solveParentheses (formula) {
-    let parenthesesSize = 0;
-    let formulaLen = formula.length;
-    for (let i = 0; i < formulaLen; i++) {
-        if (formula[i] == "(") {
-            let openCount = 1;
-            let closedCount = 0;
-            for (let j = i + 1; j < formulaLen; j++) {
-                if (formula[j] == "(")
-                    openCount++;
-                else if (formula[j] == ")")
-                    closedCount++;
-                if (openCount == closedCount)  {
-                    parenthesesSize = (j - i) + 1;
-                    let localCalc = 0;
-                    localCalc = calculate(formula.slice((i + 1), j));
-                    localCalc = localCalc.toString();
-                    formula.splice(i, parenthesesSize, localCalc);
-                    formulaLen = formula.length;
-                    break;
-                }
-            }
-        }
-    }
-    return formula;
 }

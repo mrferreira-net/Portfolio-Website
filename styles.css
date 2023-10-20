@@ -46,6 +46,7 @@ a {
 #intro {
     display: flex;
     align-items: center;
+    text-align: left;
     position: relative;
     width: 100%;
     top: 20px;
@@ -53,7 +54,6 @@ a {
 #introText {
     position: relative;
     font-size: larger;
-    text-align: left;
     padding-left: 20px;
     max-height: 300px;
     padding-right: 20px;

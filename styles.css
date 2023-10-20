@@ -42,6 +42,8 @@ a {
     position: relative;
     border-radius: 10%;
     max-width: 200px; 
+    width: 100%;
+    overflow: auto;
 }
 #intro {
     display: flex;
@@ -50,12 +52,14 @@ a {
     position: relative;
     width: 100%;
     top: 20px;
+    padding: 10px;
 }
 #introText {
     position: relative;
     font-size: larger;
-    padding-left: 20px;
     max-height: 300px;
+    min-width: 300px;
+    padding-left: 20px;
     padding-right: 20px;
 }
 /*--------------------------------------------------------------------------------------*/

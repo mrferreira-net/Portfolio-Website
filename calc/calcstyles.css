@@ -1,11 +1,12 @@
 body {
-    padding: 10px;
     background-color: rgb(197, 233, 197);
 }
 
 .customBorder {
     border: 2px solid rgb(0, 0, 0);
-    padding: 10px
+    border-radius: 2%;
+    padding: 10px;
+    background-color: rgb(89, 95, 92);
 }
 
 table {
@@ -16,14 +17,20 @@ table {
 button {
     width: 70px;
     height: 70px;
-    border: none;
-    font-size: x-large;
+    border: 5px solid rgb(177, 164, 164);
+    font-size: xx-large;
+}
+
+#siteIcon {
+    position: relative;
+    width: 50px;
 }
 
 #calc {
     position: relative;
     text-align: center;
     width: 330px;
+    margin: auto;
 }
 
 input {
@@ -31,6 +38,8 @@ input {
     width: 270px;
     height: 30px;
     font-size: x-large;
+    text-align: right;
+    border: 2px solid;
 }
 
 #footnote {
@@ -38,6 +47,7 @@ input {
     bottom: 0;
     width: 100%;
     text-align: center;
+    font-size: larger;
 }
 
 #displayAndBackspace {

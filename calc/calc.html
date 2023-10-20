@@ -5,15 +5,28 @@
             Calculator
         </title>
 
+        <link rel="apple-touch-icon" sizes="180x180" href="calcdocs/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="calcdocs/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="calcdocs/favicon-16x16.png">
+        <link rel="manifest" href="calcdocs/site.webmanifest">
+        <link rel="mask-icon" href="calcdocs/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
         <script src="calcscript.js"></script>
 
         <link rel="stylesheet" href="calcstyles.css">
     </head>
     <body>
+        <a href="https://mr-ferreira.com">
+            <img alt="siteIcon" src="calcdocs/icon.png" id="siteIcon">
+        </a>
         <form action="">
             <div class="customBorder" id="calc">
                 <div id="displayAndBackspace">
-                    <input type="text" placeholder="0" readonly id="display">
+                    <input type="text" placeholder="0" id="display" readonly>
                     <button type="button" onclick="read(event)" id="backspace">⌫</button>
                 </div>
                 <table>
@@ -31,7 +44,8 @@
                         </td>
         
                         <td>
-                            <button type="button" onclick="read(event)">/</button>
+                            <button type="button" onclick="read(event)">x</button>
+                            
                         </td>
                     </tr>
                         
@@ -49,7 +63,7 @@
                         </td>
         
                         <td>
-                            <button type="button" onclick="read(event)">x</button>
+                            <button type="button" onclick="read(event)">&divide</button>
                         </td>
                     </tr>
         
@@ -67,7 +81,7 @@
                         </td>
         
                         <td>
-                            <button type="button" onclick="read(event)">-</button>
+                            <button type="button" onclick="read(event)">+</button>
                         </td>
                     </tr>
         
@@ -85,7 +99,7 @@
                         </td>
         
                         <td>
-                            <button type="button" onclick="read(event)">+</button>
+                            <button type="button" onclick="read(event)">-</button>
                         </td>
                     </tr>
         
@@ -114,7 +128,11 @@
         <br>
 
         <div id="footnote">
-            Made by Matheus Ferreira
+            Made by <a href="https://mr-ferreira.com">Matheus Ferreira</a>
+            <br>
+            <br>
+            <a href="https://github.com/Mr-Ferreira/Mr-Ferreira.github.io/blob/main/calc/calcscript.js">See Sourcecode</a>
         </div>
+        
     </body>
 </html>

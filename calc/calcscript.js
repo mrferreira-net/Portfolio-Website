@@ -7,6 +7,7 @@ let lastId = -1;
 function read(event) {
     let trigger = event.srcElement.innerHTML;
     formula = document.querySelector('input').value;
+    length = formula.length;
 
     if (trigger == "C") 
         reset(); 
@@ -17,8 +18,12 @@ function read(event) {
             formula = "(-";
         else {
             for (let i = length - 1; i >= 0; i--) {
-                if (typeId(formula[i]) == 1 && i > 0) 
-                    continue;
+                if (typeId(formula[i]) == 1 && i > 0) {
+                    if (formula[i] == "%") 
+                        formula = formula + "x(-";
+                    else
+                        continue;
+                }
                 else if (typeId(formula[i]) == 1)
                     formula = "(-" + formula;
                 else if (i == (length - 1)){
@@ -46,8 +51,13 @@ function read(event) {
         }
     }
     else if (trigger == "=") {
+        length = formula.length;
         parse();
-        calculate();
+        formula = calculate(parsedFormula);
+        parsedFormula = [""];
+        parsedFormulaIndex = 0;
+        lastId = -1;
+        formula = formula.toString();
     }
     else if (trigger == "( )") {
         let sumLeft = 0;
@@ -111,7 +121,7 @@ function read(event) {
         else if (lastId == 0 && typeId(trigger) == 0) {
             if ((trigger == "+" || trigger == "-") && formula[length - 2] == "(")
                 formula = formula.slice(0, (length - 1)) + trigger;
-            else if ((trigger == "/" || trigger == "x") && formula[length - 2] == "(")
+            else if ((trigger == "÷" || trigger == "x") && formula[length - 2] == "(")
                 formula = formula.slice(0, (length - 1));
             else
             formula = formula.slice(0, (length - 1)) + trigger;
@@ -132,57 +142,132 @@ function read(event) {
 // Parses the formula to be later solved.
 function parse () {
     for (let i = 0; i < length; i++) {
-        let buffer = formula[i];
-        if (typeId(buffer) == 1) 
-            parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex] + buffer;
+        if (typeId(formula[i]) == 1) 
+            if (formula[i] == "%") {
+                next();
+                parsedFormula[parsedFormulaIndex] = "/";
+                next();
+                parsedFormula[parsedFormulaIndex] = "100";
+            }
+            else if ((typeId(parsedFormula[parsedFormulaIndex]) == 1))
+                parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex] + formula[i];
+            else {
+                next();
+                parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex] + formula[i];
+            }
         else {
-            parsedFormula.push("");
-            parsedFormulaIndex++;
-            if (buffer == "x")
+            next();
+            if (formula[i] == "x")
                 parsedFormula[parsedFormulaIndex] = "*";
-            else if (buffer == "+") 
+            else if (formula[i] == "+") 
                 parsedFormula[parsedFormulaIndex] = "+";
-            else if (buffer == "-") 
-                parsedFoparsedFormula[parsedFormulaIndex] = "-";
-            else if (buffer == "/") 
-                parsedFoparsedFormula[parsedFormulaIndex] = "/";
-            else if (buffer == "%") {
-                parsedFoparsedFormula[parsedFormulaIndex] = "/";
-                parsedFormula.push("");
-                parsedFormulaIndex++;
-                parsedFoparsedFormula[parsedFormulaIndex] = "100";
-            }   
-            else if (buffer == ".") 
-                parsedFoparsedFormula[parsedFormulaIndex] = ".";
-            else if (buffer == "(") 
-                parsedFoparsedFormula[parsedFormulaIndex] = ")";  
-            else if (buffer == ")") 
-                parsedFoparsedFormula[parsedFormulaIndex] = "("; 
+            else if (formula[i] == "-") 
+                parsedFormula[parsedFormulaIndex] = "-";
+            else if (formula[i] == "÷")
+                parsedFormula[parsedFormulaIndex] = "/";
+            else if (formula[i] == "(") 
+                parsedFormula[parsedFormulaIndex] = "(";  
+            else if (formula[i] == ")") 
+                parsedFormula[parsedFormulaIndex] = ")"; 
             else {
                 reset();
                 break;
             }
-            parsedFormula.push("");
-            parsedFormulaIndex++;
         } 
+    }
+    let parsedFormulaLen = parsedFormula.length;
+    for (let i = 0; i < parsedFormulaLen; i++) {
+        parsedFormulaLen = parsedFormula.length;
+        if (parsedFormula[i] == "/" && parsedFormula[i - 1] != ")") {
+            parsedFormula.splice((i - 1), 0, "(");
+            if (i < (parsedFormulaLen - 2)) 
+                parsedFormula.splice((i + 3), 0, ")");
+            else 
+                parsedFormula.push(")");
+            i++; 
+        }
     }
 }
 
-// Calculates the formula based on parse
-function calculate () {
+// Calculates the formula based on parsedFormula.
+// Recall - PEMDAS.
+function calculate (formula) {
+    let formulaLen = formula.length;
+    let calculation = 0;
     
+    // Solve parentheses using recursion.
+    let parenthesesSize = 0;
+    for (let i = 0; i < formulaLen; i++) {
+        if (formula[i] == "(") {
+            let openCount = 1;
+            let closedCount = 0;
+            for (let j = i + 1; j < formulaLen; j++) {
+                if (formula[j] == "(")
+                    openCount++;
+                else if (formula[j] == ")")
+                    closedCount++;
+                if (openCount == closedCount)  {
+                    parenthesesSize = (j - i) + 1;
+                    let localCalc = 0;
+                    localCalc = calculate(formula.slice((i + 1), j));
+                    localCalc = localCalc.toString();
+                    formula.splice(i, parenthesesSize, localCalc);
+                    formulaLen = formula.length;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Solve multiplications and divisions.
+    for (let i = 0; i < formulaLen; i++) {
+        if ((formula[i] == "*" || formula[i] == "/") && i != (formulaLen - 1)) {
+            let localCalc = 0;
+            let num1 = parseFloat(formula[i - 1])
+            let num2 = parseFloat(formula[i + 1])
+            if (formula[i] == "*")
+                localCalc = num1 * num2;
+            else
+                localCalc = num1 / num2;
+            localCalc = localCalc.toString();
+            formula.splice(i - 1, 3, localCalc);
+            formulaLen = formula.length;
+            i = i - 1;
+        }
+    }
+
+    // Solve additions and subtractions.
+    let sum = false;
+    let sub = false;
+    for (let i = 0; i < formulaLen; i++) {
+        let num = parseFloat(formula[i]);
+        if (!isNaN(num)) {
+            if (sum || i == 0) {
+                calculation = calculation + num;
+                sum = false;
+            }
+            else if (sub) {
+                calculation = calculation - num;
+                sub = false;
+            }
+        }
+        else if (formula[i] == "+") 
+            sum = true;
+        else if (formula[i] == "-") 
+            sub = true; 
+    }
+    return calculation;
 }
 
 // Returns 0 if value is a mathematical operator 1 if it's a number and -1 if it's neither.
 function typeId (value) {
-    if (value != undefined){
-        let code = value.charCodeAt(0);
-        if (value.length > 1)
+    if (value != undefined) {
+        if (value == "+/-")
             return lastId;
-        if ((code >= 48 && code <= 57) || value == "%" || value == ".")
+        if (!isNaN(parseFloat(value)) || value == "%" || value == ".")
             return 1;
         else {
-            let operators = ["x", "+", "-", "/",]
+            let operators = ["x", "+", "-", "÷",]
             let operatorsLen = operators.length;
             for (let i = 0; i < operatorsLen; i++) {
                 if (value == operators[i])
@@ -202,4 +287,11 @@ function reset () {
     parsedFormulaIndex = 0;
     length = 0;
     lastId = -1;
+}
+
+function next (){
+    if (parsedFormula[parsedFormulaIndex] != "") {
+        parsedFormula.push("");
+        parsedFormulaIndex++;
+    }
 }

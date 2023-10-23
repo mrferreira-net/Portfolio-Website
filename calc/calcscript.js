@@ -58,6 +58,8 @@ function read(event) {
         parsedFormulaIndex = 0;
         lastId = -1;
         formula = formula.toString();
+        if (formula == "0")
+            formula = "";
     }
     else if (trigger == "( )") {
         let sumLeft = 0;
@@ -129,7 +131,9 @@ function read(event) {
         else 
             formula = formula + trigger
     }
-    else 
+    else if (typeId(trigger) == 1 && length > 1 && (formula[length - 1] == "%" || formula[length - 1] == ")"))
+        formula = formula + "x" + trigger;
+    else
         formula = formula + trigger;
     
     length = formula.length;
@@ -165,8 +169,11 @@ function parse () {
                 parsedFormula[parsedFormulaIndex] = "-";
             else if (formula[i] == "÷" && i < (length - 1))
                 parsedFormula[parsedFormulaIndex] = "/";
-            else if (formula[i] == "(") 
+            else if (formula[i] == "(" && i < (length - 1)) 
                 parsedFormula[parsedFormulaIndex] = "(";  
+            else if (formula[i] == "(" && length > 1 && i == (length - 1)) {
+                parsedFormula.pop();
+            }
             else if (formula[i] == ")") 
                 parsedFormula[parsedFormulaIndex] = ")"; 
         } 
@@ -220,6 +227,8 @@ function calculate (formula) {
                     parenthesesSize = (j - i) + 1;
                     let localCalc = 0;
                     localCalc = calculate(formula.slice((i + 1), j));
+                    if (localCalc == "ERROR")
+                        return "ERROR";
                     localCalc = localCalc.toString();
                     formula.splice(i, parenthesesSize, localCalc);
                     formulaLen = formula.length;
@@ -237,8 +246,12 @@ function calculate (formula) {
             let num2 = parseFloat(formula[i + 1])
             if (formula[i] == "*")
                 localCalc = num1 * num2;
-            else
-                localCalc = num1 / num2;
+            else {
+                if (num2 == 0)
+                    return "ERROR";
+                else
+                    localCalc = num1 / num2;
+            }
             localCalc = localCalc.toString();
             formula.splice(i - 1, 3, localCalc);
             formulaLen = formula.length;

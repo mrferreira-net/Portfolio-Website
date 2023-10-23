@@ -169,13 +169,8 @@ function parse () {
                 parsedFormula[parsedFormulaIndex] = "(";  
             else if (formula[i] == ")") 
                 parsedFormula[parsedFormulaIndex] = ")"; 
-            else {
-                reset();
-                break;
-            }
         } 
     }
-    // ------------- CAUSING ISSUES V
     let parsedFormulaLen = parsedFormula.length;
     for (let i = 0; i < parsedFormulaLen; i++) {
         parsedFormulaLen = parsedFormula.length;
@@ -188,7 +183,6 @@ function parse () {
             i++; 
         }
     }
-    // ---------------
     let sumLeft = 0;
     let sumRight = 0;
     parsedFormulaLen = parsedFormula.length;

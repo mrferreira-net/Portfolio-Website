@@ -157,13 +157,13 @@ function parse () {
             }
         else {
             next();
-            if (formula[i] == "x")
+            if (formula[i] == "x" && i < (length - 1))
                 parsedFormula[parsedFormulaIndex] = "*";
-            else if (formula[i] == "+") 
+            else if (formula[i] == "+" && i < (length - 1)) 
                 parsedFormula[parsedFormulaIndex] = "+";
-            else if (formula[i] == "-") 
+            else if (formula[i] == "-" && i < (length - 1)) 
                 parsedFormula[parsedFormulaIndex] = "-";
-            else if (formula[i] == "÷")
+            else if (formula[i] == "÷" && i < (length - 1))
                 parsedFormula[parsedFormulaIndex] = "/";
             else if (formula[i] == "(") 
                 parsedFormula[parsedFormulaIndex] = "(";  
@@ -179,7 +179,7 @@ function parse () {
     let parsedFormulaLen = parsedFormula.length;
     for (let i = 0; i < parsedFormulaLen; i++) {
         parsedFormulaLen = parsedFormula.length;
-        if (parsedFormula[i] == "/" && parsedFormula[i - 1] != ")") {
+        if (parsedFormula[i] == "/" && parsedFormula[i - 1] != ")" && parsedFormula[i + 1] != "(") {
             parsedFormula.splice((i - 1), 0, "(");
             if (i < (parsedFormulaLen - 2)) 
                 parsedFormula.splice((i + 3), 0, ")");
@@ -198,8 +198,11 @@ function parse () {
         else if (parsedFormula[i] == ")")
             sumRight++;    
     }
-    if (sumLeft > sumRight)
+    while (sumLeft > sumRight) {
         parsedFormula.push(")");
+        sumRight++;
+    }
+        
 }
 
 // Calculates the formula based on parsedFormula.

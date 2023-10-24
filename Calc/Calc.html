@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Calculator
+        </title>
+
+        <link rel="apple-touch-icon" sizes="180x180" href="Documents/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="Documents/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="Documents/favicon-16x16.png">
+        <link rel="manifest" href="Documents/site.webmanifest">
+        <link rel="mask-icon" href="Documents/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="calcscript.js"></script>
+
+        <link rel="stylesheet" href="calcstyles.css">
+    </head>
+    <body>
+        <a href="https://mr-ferreira.com">
+            <img alt="siteIcon" src="Documents/icon.png" id="siteIcon">
+        </a>
+        <form action="">
+            <div class="customBorder" id="calc">
+                <div id="displayAndBackspace">
+                    <input type="text" placeholder="0" id="display" readonly>
+                    <button type="button" onclick="read(event)" id="backspace">⌫</button>
+                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <button type="button" onclick="read(event)">C</button>
+                        </td>
+                            
+                        <td>
+                            <button type="button" onclick="read(event)">( )</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">%</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">&divide</button>
+                            
+                        </td>
+                    </tr>
+                        
+                    <tr>
+                        <td>
+                            <button type="button" onclick="read(event)">7</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">8</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">9</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">x</button>
+                        </td>
+                    </tr>
+        
+                    <tr>
+                        <td>
+                            <button type="button" onclick="read(event)">4</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">5</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">6</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">-</button>
+                        </td>
+                    </tr>
+        
+                    <tr>
+                        <td>
+                            <button type="button" onclick="read(event)">1</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">2</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">3</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">+</button>
+                        </td>
+                    </tr>
+        
+                    <tr>
+                        <td>
+                            <button type="button" onclick="read(event)">+/-</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">0</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">.</button>
+                        </td>
+        
+                        <td>
+                            <button type="button" onclick="read(event)">=</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+        </form>
+        <br>
+        <br>
+
+        <div id="footnote">
+            Made by <a href="https://mr-ferreira.com" target="_blank">Matheus Ferreira</a>
+            <br>
+            <br>
+            <a href="https://github.com/Mr-Ferreira/Mr-Ferreira.github.io/blob/main/calc/calcscript.js" target="_blank">See Sourcecode</a>
+        </div>
+        
+    </body>
+</html>

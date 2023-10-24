@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <title>
             Matheus Ferreira
         </title>
 
-        <link rel="apple-touch-icon" sizes="180x180" href="Docs/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="Docs/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="Docs/favicon-16x16.png">
-        <link rel="manifest" href="Docs/site.webmanifest">
-        <link rel="mask-icon" href="Docs/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="apple-touch-icon" sizes="180x180" href="Documents/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="Documents/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="Documents/favicon-16x16.png">
+        <link rel="manifest" href="Documents/site.webmanifest">
+        <link rel="mask-icon" href="Documents/safari-pinned-tab.svg" color="#5bbad5">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
 
@@ -31,32 +31,35 @@
     <body>
         <div id="headerContainer">
             <a href="https://mr-ferreira.com">
-                <img alt="siteIcon" src="Docs/icon.png" id="siteIcon">
+                <img alt="siteIcon" src="Documents/icon.png" id="siteIcon">
             </a>
             <div id="header">
-                Welcome to my Portfolio Website!
-            </div>
-        </div>
-        
-        
-        <div id="intro">
-            <img alt="Profile picture" src="Docs/5vktp1adsfas7.jpg" id="profilePic">
-            <div id="introText">
-                My name is Matheus Ferreira, I am a second year Computer Science student and I am pursuing a degree in Computer 
-                Science, with an interest in Big Data and Algorithms.
+                Matheus Ferreira
+                <div style="font-size: x-large;">
+                    Software Engineer
+                </div>
             </div>
         </div>
         <br>
-
-        <div class="customBorder">
-            <div class="decorate">
-                About me:
+        
+        <div class="card mb-3 cards" style="padding: 10px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img alt="Profile picture" src="Documents/5vktp1adsfas7.jpg" id="profilePic2">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title" style="text-decoration: underline;">About me:</h5>
+                  <p class="card-text">My name is Matheus Ferreira, I am a second year Computer Science student and I am 
+                    pursuing a degree in Computer 
+                    Science, with an interest in Big Data and Algorithms. I love learning and talking about science, 
+                    mathematics, and philosophy! 
+                    I am currently attending Hillsborough 
+                    Community College in Tampa while I complete my Computer Science AA track.
+                    I am an eventual University of Florida transfer student, where I will get my B.S. in Computer Science!</p>
+                </div>
+              </div>
             </div>
-            I love learning and talking about science, mathematics, and philosophy!
-            <br>
-            Currently attending Hillsborough 
-            Community College in Tampa while I complete my Computer Science AA track.
-            I am an eventual University of Florida transfer student, where I will get my Bachelor's in Computer Science!
         </div>
         <br>
 
@@ -64,38 +67,85 @@
             <div class="decorate">
                 Here are some of my cool mini-projects:
             </div>
-            <a href="calc/calc.html" target="_blank">Calculator made from scratch!</a>
-            <br>
-            <a href="2dgame/2dgame.html" target="_blank">2D browser game (WIP)</a>
-            <br>
-            <a href="weatherapp/Weatherapp.html" target="_blank">Weather app (WIP)</a>
-        </div>
 
+            <div class="card-group" style="padding: 10px;">
+
+                <div class="card cards border-dark" style="padding: 2px;">
+                    <a href="calc/calc.html" target="_blank">
+                        <img src="Documents/Screenshot 2023-10-24 133110.png" class="card-img-top" alt="calculator app picture" style="height: 300px;">
+                    </a>
+                  <div class="card-body">
+                    <a href="calc/calc.html" target="_blank">
+                        <h5 class="card-title">Calculator</h5>
+                    </a>
+                    <p class="card-text">Simple Calculator made from scratch using only the default Javascript library. Still adding features - with plans 
+                        to make a fully functioning scientific calculator.</p>
+                    <a href="https://github.com/Mr-Ferreira/Mr-Ferreira.github.io/blob/main/calc/calcscript.js" target="_blank">See Sourcecode</a>
+                  </div>
+                </div>
+
+                <div class="card cards border-dark" style="padding: 2px;">
+                    <a href="2dgame/2dgame.html" target="_blank">
+                        <img src="Documents/WIP.png" class="card-img-top" alt="calculator app picture" style="height: 300px;">
+                    </a>
+                  <div class="card-body">
+                    <a href="2dgame/2dgame.html" target="_blank">
+                        <h5 class="card-title">2D Browser Game</h5>
+                    </a>
+                    <p class="card-text">WIP</p>
+                  </div>
+                </div>
+
+                <div class="card cards border-dark" style="padding: 2px;">
+                    <a href="weatherapp/Weatherapp.html" target="_blank">
+                        <img src="Documents/WIP.png" class="card-img-top" alt="calculator app picture" style="height: 300px;">
+                    </a>
+                  <div class="card-body">
+                    <a href="weatherapp/Weatherapp.html" target="_blank">
+                        <h5 class="card-title">Weather App</h5>
+                    </a>
+                    <p class="card-text">WIP</p>
+                  </div>
+                </div>
+
+              </div>
+        </div>
+        <br>
 
         
         <div id="linksTable">
             <hr id="bottomPageLine">
+            <br>
             <div class="decorate">
                 Here are my links:
             </div>
 
             <div id="links">
-                <a href="https://github.com/Mr-Ferreira" id="githubLink" target="_blank">
-                    <img alt="githubIcon" src="Docs/githubicon.png" id="githubIcon">
-                    GitHub
-                </a>
-                <a href="https://linkedin.com/in/mrferreira1" id="linkedinLink" target="_blank">
-                    <img alt="linkedinIcon" src="Docs/linkedinicon.png" id="linkedinIcon">
-                    LinkedIn
-                </a>
-                <a href="mailto: mathew.r.ferreira@gmail.com" id="emailLink" target="_blank">
-                    <img alt="emailIcon" src="Docs/email icon.png" id="emailIcon">
-                    Email
-                </a>
+                <div>
+                    <a href="https://github.com/Mr-Ferreira" id="githubLink" target="_blank">
+                        <img alt="githubIcon" src="Documents/githubicon.png" id="githubIcon">
+                    </a>
+                </div>  
+                <div>
+                    <a href="https://linkedin.com/in/mrferreira1" id="linkedinLink" target="_blank">
+                        <img alt="linkedinIcon" src="Documents/linkedinicon.png" id="linkedinIcon">
+                    </a>
+                </div>   
+                <div>
+                    <a href="mailto: mathew.r.ferreira@gmail.com" id="emailLink" target="_blank">
+                        <img alt="emailIcon" src="Documents/email icon.png" id="emailIcon">
+                    </a>
+                </div>
             </div>
-            <br> 
 
-            <div id="scratch">
+            <a href="mailto: mathew.r.ferreira@gmail.com" id="emailLink" target="_blank">
+                mathew.r.ferreira@gmail.com
+            </a>
+
+            <br>
+            <br>
+
+            <div id="scratch" class="text-muted">
                 This website is a work in progress and was made from scratch!
             </div>
         </div>

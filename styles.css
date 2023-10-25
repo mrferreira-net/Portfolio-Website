@@ -3,17 +3,14 @@ body {
     color: white;
     padding: 10px;
 }
-
 a {
     color: rgb(129, 213, 219);
 }
-
 .decorate {
     font-size: large;
     text-decoration: underline;
     font-weight: 600;
 }
-
 .center {
     margin: auto;
     width: 50%;
@@ -21,7 +18,7 @@ a {
 }
 .customBorder {
     border: 2px solid rgb(85, 85, 85);
-    padding: 10px
+    padding: 10px;
 }
 /*--------------------------------------------------------------------------------------*/
 #headerContainer {
@@ -36,6 +33,7 @@ a {
     font-size: 60px;
     width: 100%;
     text-align: center;
+    margin-right: 7%;
 }
 /*--------------------------------------------------------------------------------------*/
 .cards {
@@ -47,14 +45,7 @@ a {
     width: 90%;
     border-radius: 1%;
 }
-#profilePic {
-    position: relative;
-    border-radius: 10%;
-    max-width: 250px;
-    width: 30%;
-}
 /*--------------------------------------------------------------------------------------*/
-
 #bottomPageLine {
     border-top: 1px solid rgb(78, 78, 78);
 }

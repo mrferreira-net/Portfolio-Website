@@ -1,7 +1,43 @@
 body {
-    background-color: rgb(207, 223, 236);
+    background-color: rgb(36, 36, 36);
+    background-image: url("Assets/Background/Cobblestone.png");
+}
+#siteIcon {
+    position: relative;
+    width: 50px;
+}
+#siteIcon {
+    position: relative;
+    width: 50px;
+}
+#header {
+    position: relative;
+    border-radius: 10%;
+    background-color: rgb(61, 61, 61);
+    bottom: 5px;
+    font-size: 60px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    width: 100%;
+    max-width: 690px;
+    text-align: center;
+    margin: auto;
+    margin-right: 18%;
+    color: rgb(255, 251, 0);
+}
+#display {
+    top: 20px;
+    position: relative;
+    border: 2px solid rgb(88, 88, 88);
+    background-color: black;
+    margin: auto;
+    width: 900px;
+    height: 700px;
+    overflow: hidden;
 }
 
-#Construction {
-    font-size: xx-large;
+.menu {
+    position: relative;
+    text-align: center;
+    color: yellow;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }

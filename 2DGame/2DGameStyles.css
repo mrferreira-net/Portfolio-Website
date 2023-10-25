@@ -12,16 +12,13 @@ body {
 }
 #header {
     position: relative;
-    border-radius: 10%;
-    background-color: rgb(61, 61, 61);
     bottom: 5px;
     font-size: 60px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     width: 100%;
-    max-width: 690px;
     text-align: center;
     margin: auto;
-    margin-right: 18%;
+    padding-right: 50px;
     color: rgb(255, 251, 0);
 }
 #display {

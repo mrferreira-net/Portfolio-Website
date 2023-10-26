@@ -30,28 +30,28 @@
                     <img alt="siteIcon" src="Documents/icon.png" id="siteIcon">
                 </a>
             </div>
-            <div id="header">
-                Mighty's Tower Defence
-            </div>
-        </div>
-        
-        <div id="display">
-            <div id="menu" class="menu" style="top: 50px;">
-                <div id="menuTitle" style="font-size: 40px;">
-                    Main Menu
-                </div>
-                <div>
-                    New Game
-                </div>
-                <div>
-                    Maps
-                </div>
-                <div>
-                    Settings
-                </div>
-            </div>
             
         </div>
-        
+
+        <div id="container">
+            <canvas id="display"></canvas>
+            <menu id="controls">
+                <div>
+                    <button id="playButton" style="bottom: 185px;" onclick="play()">Play!</button>
+                </div>
+                <div>
+                    <button id="mapsButton" style="bottom: 180px;" onclick="maps()">Maps</button>
+                </div>
+                <div>
+                    <button id="settingsButton" style="bottom: 175px;" onclick="settings()">Settings</button>
+                </div>
+                <div class="card" style="width: 200px;" id="mapPreview">
+                    <img src="" class="card-img-top" alt="mapPreview" id="mapPreviewImage">
+                    <div class="card-body">
+                      <p class="card-text" id="mapPreviewText"></p>
+                    </div>
+                </div>
+            </menu>
+        </div>
     </body>
 </html>

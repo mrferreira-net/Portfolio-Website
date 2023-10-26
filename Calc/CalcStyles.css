@@ -10,29 +10,28 @@ body {
 }
 
 table {
-    padding: 10px;
     position: relative;
+    padding: 10px;
 }
-
 button {
     width: 70px;
     height: 70px;
-    border: 5px solid rgb(177, 164, 164);
+    border-style: outset;
+    border-width: 5px;
+    border-color: rgb(206, 206, 206);
     font-size: xx-large;
 }
-
 #siteIcon {
     position: relative;
     width: 50px;
 }
-
 #calc {
     position: relative;
     text-align: center;
     width: 330px;
+    height: auto;
     margin: auto;
 }
-
 input {
     bottom: 10px;
     width: 270px;
@@ -41,7 +40,6 @@ input {
     text-align: right;
     border: 2px solid;
 }
-
 #footnote {
     position: relative;
     bottom: 0;
@@ -56,7 +54,6 @@ input {
     position: relative;
     width: 100%;
 }
-
 #backspace {
     position: relative;
     left: 10px;

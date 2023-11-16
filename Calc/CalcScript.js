@@ -140,15 +140,15 @@ function read(event) {
     else if (typeId(trigger) == 1 && length > 1 && (formula[length - 1] == "%" || formula[length - 1] == ")"))
         formula = formula + "x" + trigger;
     else {
-        let decInNum = false;
+        let naturalNumOrDecimal = false;
         for (let i = length - 1; i >= 0; i--) {
             if (typeId(formula[i]) == 0 && formula[i] != ".") 
                 break;
-            else if (formula[i] == ".") 
-                decInNum = true;
+            else if (formula[i] == "." || parseInt(formula[i]) > 0) 
+                naturalNumOrDecimal = true;
         }
 
-        if (trigger == "0" && decInNum == false && formula[length - 1] == "0")
+        if (trigger == "0" && naturalNumOrDecimal == false && formula[length - 1] == "0")
             return;
 
         let digitCount = 0;

@@ -4,15 +4,19 @@ let parsedFormulaIndex = 0;
 let length = 0;
 let lastId = -1;
 
+// trigger function that designates the formula set up based on button input.
 function read(event) {
     let trigger = event.srcElement.innerHTML;
-    formula = document.querySelector('input').value;
+    formula = document.querySelector('#display').value;
     length = formula.length;
 
     if (trigger == "C") 
         reset(); 
-    else if (trigger == "⌫") 
+    else if (trigger == "⌫") {
         formula = formula.slice(0, (length - 1));
+        fancy();
+    }
+        
     else if (trigger == "+/-") {
         if (length == 0)
             formula = "(-";
@@ -54,12 +58,10 @@ function read(event) {
         length = formula.length;
         parse();
         formula = calculate(parsedFormula);
-        parsedFormula = [""];
-        parsedFormulaIndex = 0;
-        lastId = -1;
-        formula = formula.toString();
-        if (formula == "0")
-            formula = "";
+        fancy();
+        document.querySelector('#display').value = formula;
+        reset();
+        return;
     }
     else if (trigger == "( )") {
         let sumLeft = 0;
@@ -129,16 +131,31 @@ function read(event) {
             formula = formula.slice(0, (length - 1)) + trigger;
         }
         else 
-            formula = formula + trigger
+            formula = formula + trigger;
     }
     else if (typeId(trigger) == 1 && length > 1 && (formula[length - 1] == "%" || formula[length - 1] == ")"))
         formula = formula + "x" + trigger;
-    else
-        formula = formula + trigger;
-    
+    else {
+        let digitCount = 0;
+        let decDigitCount = 0;
+        for (let i = length - 1; i >= 0; i--) {
+            if (typeId(formula[i]) == 0 && formula[i] != ".") 
+                break;
+            else if (formula[i] == ".") {
+                decDigitCount = digitCount;
+                continue;
+            }
+            else if (formula[i] == ",")
+                continue;
+            digitCount++;
+        }
+        if (digitCount < 15 && decDigitCount < 10)
+            formula = formula + trigger;
+    }
     length = formula.length;
     lastId = typeId(formula[length - 1]);
-    document.querySelector('input').value = formula;
+    fancy()
+    document.querySelector('#display').value = formula;
 }
 
 //-------------------------------NON-MAIN FUNCTIONS-------------------------------
@@ -149,10 +166,17 @@ function parse () {
         if (typeId(formula[i]) == 1) 
             if (formula[i] == "%") {
                 next();
+                parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex - 1];
+                parsedFormula[parsedFormulaIndex - 1] = "(";
+                next();
                 parsedFormula[parsedFormulaIndex] = "/";
                 next();
                 parsedFormula[parsedFormulaIndex] = "100";
+                next();
+                parsedFormula[parsedFormulaIndex] = ")";
             }
+            else if (formula[i] == ",") 
+                continue;
             else if ((typeId(parsedFormula[parsedFormulaIndex]) == 1))
                 parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex] + formula[i];
             else {
@@ -229,7 +253,6 @@ function calculate (formula) {
                     localCalc = calculate(formula.slice((i + 1), j));
                     if (localCalc == "ERROR")
                         return "ERROR";
-                    localCalc = localCalc.toString();
                     formula.splice(i, parenthesesSize, localCalc);
                     formulaLen = formula.length;
                     break;
@@ -252,7 +275,7 @@ function calculate (formula) {
                 else
                     localCalc = num1 / num2;
             }
-            localCalc = localCalc.toString();
+            localCalc = precision(localCalc.toString());
             formula.splice(i - 1, 3, localCalc);
             formulaLen = formula.length;
             i = i - 1;
@@ -273,13 +296,65 @@ function calculate (formula) {
                 calculation = calculation - num;
                 sub = false;
             }
+            calculation = parseFloat(precision(calculation.toString()));
         }
         else if (formula[i] == "+") 
             sum = true;
         else if (formula[i] == "-") 
             sub = true; 
     }
-    return calculation;
+    return calculation.toString();
+}
+
+// Limits size of calculated numbers to 10 digits after the decimal,
+// this is due to Javascript's floating point number innaccuracy.
+function precision(num) {
+    if (num == "0") {
+        num = "";
+        return num;
+    }
+    
+
+    // Counts number of digits after the decimal
+    let dec = false;
+    let decDigitCount = 0;
+    let tempNum = "";
+    let decIndex = -1;
+    for (let i = 0; i < num.length; i++) {
+        if (num[i] == ".") {
+            dec = true;
+            decIndex = i;
+            continue;
+        }
+        if (dec)
+            decDigitCount++;
+        if (decDigitCount == 11) {
+            if ((i + 1) > (num.length - 1)) 
+                tempNum = num;
+            else
+                tempNum = num.slice(0, i + 1);
+            break;
+        }
+    }
+
+    
+    if (decDigitCount < 11) 
+        return num;
+    else if (parseInt(tempNum[tempNum.length - 1]) > 4) {
+        let newVal = parseInt(tempNum.slice(decIndex + 1, (tempNum.length - 1))) + 1;
+        newVal = newVal.toString();
+        if (newVal.length == 11) {
+            num = parseInt(tempNum.slice(0, decIndex)) + 1;
+            num = num.toString();
+        }
+        else 
+            num = tempNum.slice(0, decIndex) + "." + newVal;
+    }
+    else {
+        num = parseFloat(tempNum.slice(0, (tempNum.length - 1)));
+        num = num.toString();
+    }
+    return num;
 }
 
 // Returns 0 if value is a mathematical operator 1 if it's a number and -1 if it's neither.
@@ -287,7 +362,7 @@ function typeId (value) {
     if (value != undefined) {
         if (value == "+/-")
             return lastId;
-        if (!isNaN(parseFloat(value)) || value == "%" || value == ".")
+        if (!isNaN(parseFloat(value)) || value == "%" || value == "." || value == ",")
             return 1;
         else {
             let operators = ["x", "+", "-", "÷",]
@@ -301,6 +376,57 @@ function typeId (value) {
     }
     else
         return lastId;
+}
+
+// Adds commas for every 3 integer digits
+function fancy () {
+    length = formula.length;
+    let nonFancy = ""
+    let newNumStartIndex = -1;
+    let decInNum = false;
+    for (let i = 0; i < length; i++) {
+        if (formula[i] != "," && decInNum == false)
+            nonFancy = nonFancy + formula[i];
+        if (formula[i] == ".") {
+            decInNum = true;
+            nonFancy = nonFancy.slice(0, (nonFancy.length - 1));
+            newNumStartIndex = i;
+        }
+        if (formula[i] == "(") {
+            nonFancy = "";
+            newNumStartIndex = i;
+        }
+        if (typeId(formula[i]) == 0 || formula[i] == ")" || formula[i] == "%") {
+            decInNum = false;
+            nonFancy = "";
+            newNumStartIndex = i;
+        }
+        
+    }
+    let nonFancyLen = nonFancy.length;
+
+    if (nonFancyLen > 0 && nonFancy != "0") {
+        let fancy = "";
+        for (let i = nonFancyLen - 4; i >= 0; i = i - 3) {
+            if (i == nonFancyLen - 4) 
+                fancy = "," + nonFancy.slice(i + 1) + fancy;
+            else
+                fancy = "," + nonFancy.slice(i + 1, i + 4) + fancy;
+        }
+            
+        if (nonFancyLen % 3 == 2) 
+            fancy = nonFancy.slice(0, 2) + fancy;
+        if (nonFancyLen % 3 == 1)
+            fancy = nonFancy[0] + fancy;
+        if (nonFancyLen % 3 == 0)
+            fancy = nonFancy.slice(0, 3) + fancy;
+        if (newNumStartIndex == -1) 
+            formula = fancy;
+        else if (decInNum)
+            formula = fancy + "." + formula.slice(newNumStartIndex + 1);
+        else
+            formula = formula.slice(0, (newNumStartIndex + 1)) + fancy;
+    }
 }
 
 // Resets the calculator

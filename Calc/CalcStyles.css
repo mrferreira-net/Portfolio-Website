@@ -28,17 +28,23 @@ button {
 #calc {
     position: relative;
     text-align: center;
-    width: 330px;
+    width: 350px;
     height: auto;
     margin: auto;
 }
-input {
+#display {
+    text-wrap:wrap;
     bottom: 10px;
-    width: 270px;
-    height: 30px;
-    font-size: x-large;
+    width: 295px;
+    max-width: 295px;
+    min-width: 295px;
+    max-height: 200px;
+    min-height: 100px;
+    height: 100px;
+    font-size: 30px;
     text-align: right;
     border: 2px solid;
+    font-family: Arial, Helvetica, sans-serif;
 }
 #footnote {
     position: relative;

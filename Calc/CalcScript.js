@@ -2,13 +2,15 @@ let formula = "";
 let parsedFormula = [""];
 let parsedFormulaIndex = 0;
 let length = 0;
-let lastId = -1;
 
-// trigger function that designates the formula set up based on button input.
+// trigger function that designates the formula set-up based on button input.
 function read(event) {
     let trigger = event.srcElement.innerHTML;
     formula = document.querySelector('#display').value;
     length = formula.length;
+    let lastId = -1;
+    if (length > 0)
+        lastId = typeId(formula[length - 1]);
 
     if (trigger == "C") 
         reset(); 
@@ -56,12 +58,14 @@ function read(event) {
     }
     else if (trigger == "=") {
         length = formula.length;
-        parse();
-        formula = calculate(parsedFormula);
-        fancy();
-        document.querySelector('#display').value = formula;
-        reset();
-        return;
+        if (length == 0 || formula == "ERROR")
+            return;
+        else if (parseFloat(formula) == 0) 
+            formula = "";
+        else {
+            parse();
+            formula = calculate(parsedFormula);
+        }
     }
     else if (trigger == "( )") {
         let sumLeft = 0;
@@ -136,6 +140,17 @@ function read(event) {
     else if (typeId(trigger) == 1 && length > 1 && (formula[length - 1] == "%" || formula[length - 1] == ")"))
         formula = formula + "x" + trigger;
     else {
+        let decInNum = false;
+        for (let i = length - 1; i >= 0; i--) {
+            if (typeId(formula[i]) == 0 && formula[i] != ".") 
+                break;
+            else if (formula[i] == ".") 
+                decInNum = true;
+        }
+
+        if (trigger == "0" && decInNum == false && formula[length - 1] == "0")
+            return;
+
         let digitCount = 0;
         let decDigitCount = 0;
         for (let i = length - 1; i >= 0; i--) {
@@ -152,10 +167,10 @@ function read(event) {
         if (digitCount < 15 && decDigitCount < 10)
             formula = formula + trigger;
     }
-    length = formula.length;
-    lastId = typeId(formula[length - 1]);
-    fancy()
+    
+    fancy();
     document.querySelector('#display').value = formula;
+    reset();
 }
 
 //-------------------------------NON-MAIN FUNCTIONS-------------------------------
@@ -177,6 +192,13 @@ function parse () {
             }
             else if (formula[i] == ",") 
                 continue;
+            else if (formula[i] == "e") {
+                next();
+                parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex - 1];
+                parsedFormula[parsedFormulaIndex - 1] = "(";
+                parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex] + "e" + formula[i + 1];
+                i++;
+            }
             else if ((typeId(parsedFormula[parsedFormulaIndex]) == 1))
                 parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex] + formula[i];
             else {
@@ -362,7 +384,7 @@ function typeId (value) {
     if (value != undefined) {
         if (value == "+/-")
             return lastId;
-        if (!isNaN(parseFloat(value)) || value == "%" || value == "." || value == ",")
+        if (!isNaN(parseFloat(value)) || value == "%" || value == "." || value == "," || value == "e")
             return 1;
         else {
             let operators = ["x", "+", "-", "÷",]
@@ -405,7 +427,7 @@ function fancy () {
     }
     let nonFancyLen = nonFancy.length;
 
-    if (nonFancyLen > 0 && nonFancy != "0") {
+    if (nonFancyLen > 0 && nonFancy != "0" && formula != "ERROR") {
         let fancy = "";
         for (let i = nonFancyLen - 4; i >= 0; i = i - 3) {
             if (i == nonFancyLen - 4) 
@@ -435,7 +457,6 @@ function reset () {
     parsedFormula = [""];
     parsedFormulaIndex = 0;
     length = 0;
-    lastId = -1;
 }
 
 function next (){

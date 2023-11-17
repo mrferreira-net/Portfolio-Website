@@ -55,7 +55,7 @@ a {
 #linksTable {
     text-align: center;
 }
-#githubIcon, #linkedinIcon, #emailIcon {
+#githubIcon, #linkedinIcon {
     width: 40px;
     background-color: rgb(255, 255, 255);
     border-radius: 10%;
@@ -63,7 +63,7 @@ a {
 #links {
     padding: 20px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     max-width: 250px;
     margin: auto;
 }

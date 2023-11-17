@@ -149,12 +149,8 @@ function read(event) {
         else {
             if (formula[length - 1] == ".")
                 formula = formula.slice(0, length - 1) + trigger;
-            else if (formula == "0" && trigger == "+")
-                return;
             else if (formula[length - 1] == "(" && trigger == "+")
                 return;
-            else if (formula == "0" && trigger == "-")
-                formula = trigger;
             else
                 formula = formula + trigger;
         } 

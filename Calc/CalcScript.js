@@ -1,4 +1,4 @@
-let formula = "";
+let formula = "0";
 let parsedFormula = [""];
 let parsedFormulaIndex = 0;
 let length = 0;
@@ -60,8 +60,6 @@ function read(event) {
         length = formula.length;
         if (length == 0 || formula == "ERROR")
             return;
-        else if (parseFloat(formula) == 0 && formula != "0÷0") 
-            formula = "";
         else {
             parse();
             formula = calculate(parsedFormula);
@@ -472,7 +470,7 @@ function fancy () {
 
 // Resets the calculator
 function reset () {
-    formula = "";
+    formula = "0";
     parsedFormula = [""];
     parsedFormulaIndex = 0;
     length = 0;

@@ -13,13 +13,14 @@ table {
     position: relative;
     padding: 10px;
 }
+
 button {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     border-style: outset;
     border-width: 5px;
     border-color: rgb(206, 206, 206);
-    font-size: xx-large;
+    font-size: 40px;
 }
 #siteIcon {
     position: relative;
@@ -28,7 +29,7 @@ button {
 #calc {
     position: relative;
     text-align: center;
-    width: 350px;
+    width: 390px;
     height: auto;
     margin: auto;
 }
@@ -38,9 +39,9 @@ button {
 #display {
     text-wrap:wrap;
     bottom: 10px;
-    width: 300px;
-    max-width: 300px;
-    min-width: 300px;
+    width: 330px;
+    max-width: 330px;
+    min-width: 330px;
     max-height: 200px;
     min-height: 100px;
     height: 100px;
@@ -65,8 +66,8 @@ button {
 }
 #backspace {
     position: relative;
-    left: 10px;
-    width: 40px;
-    height: 40px;
-    font-size: medium;
+    left: 6px;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
 }

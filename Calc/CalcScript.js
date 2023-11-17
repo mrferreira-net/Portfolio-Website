@@ -17,11 +17,15 @@ function read(event) {
     else if (trigger == "⌫") {
         formula = formula.slice(0, (length - 1));
         fancy();
+        if (formula == "") 
+            reset();
     }
         
     else if (trigger == "+/-") {
-        if (length == 0)
+        if (formula == "0")
             formula = "(-";
+        else if (formula == "(-")
+            formula = "0";
         else {
             for (let i = length - 1; i >= 0; i--) {
                 if (typeId(formula[i]) == 1 && i > 0) {
@@ -58,7 +62,7 @@ function read(event) {
     }
     else if (trigger == "=") {
         length = formula.length;
-        if (length == 0 || formula == "ERROR")
+        if (formula == "0" || formula == "ERROR")
             return;
         else {
             parse();
@@ -76,7 +80,7 @@ function read(event) {
                 sumRight++;    
         }
 
-        if (length == 0) 
+        if (formula == "0") 
             formula = "(";
         else if (lastId != 0 && sumLeft == sumRight)
             formula = formula + "x(";
@@ -473,7 +477,6 @@ function reset () {
     formula = "0";
     parsedFormula = [""];
     parsedFormulaIndex = 0;
-    length = 0;
 }
 
 function next (){

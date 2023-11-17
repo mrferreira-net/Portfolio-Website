@@ -140,32 +140,36 @@ function read(event) {
     else if (typeId(trigger) == 1 && length > 1 && (formula[length - 1] == "%" || formula[length - 1] == ")"))
         formula = formula + "x" + trigger;
     else {
-        let naturalNumOrDecimal = false;
-        for (let i = length - 1; i >= 0; i--) {
-            if (typeId(formula[i]) == 0 && formula[i] != ".") 
-                break;
-            else if (formula[i] == "." || parseInt(formula[i]) > 0) 
-                naturalNumOrDecimal = true;
-        }
-
-        if (trigger == "0" && naturalNumOrDecimal == false && formula[length - 1] == "0")
-            return;
-
-        let digitCount = 0;
-        let decDigitCount = 0;
-        for (let i = length - 1; i >= 0; i--) {
-            if (typeId(formula[i]) == 0 && formula[i] != ".") 
-                break;
-            else if (formula[i] == ".") {
-                decDigitCount = digitCount;
-                continue;
+        if (formula == "0")
+            formula = trigger;
+        else {
+            let naturalNumOrDecimal = false;
+            for (let i = length - 1; i >= 0; i--) {
+                if (typeId(formula[i]) == 0 && formula[i] != ".") 
+                    break;
+                else if (formula[i] == "." || parseInt(formula[i]) > 0) 
+                    naturalNumOrDecimal = true;
             }
-            else if (formula[i] == ",")
-                continue;
-            digitCount++;
+
+            if (trigger == "0" && naturalNumOrDecimal == false && formula[length - 1] == "0")
+                return;
+
+            let digitCount = 0;
+            let decDigitCount = 0;
+            for (let i = length - 1; i >= 0; i--) {
+                if (typeId(formula[i]) == 0 && formula[i] != ".") 
+                    break;
+                else if (formula[i] == ".") {
+                    decDigitCount = digitCount;
+                    continue;
+                }
+                else if (formula[i] == ",")
+                    continue;
+                digitCount++;
+            }
+            if (digitCount < 15 && decDigitCount < 10)
+                formula = formula + trigger;
         }
-        if (digitCount < 15 && decDigitCount < 10)
-            formula = formula + trigger;
     }
     
     fancy();
@@ -342,11 +346,16 @@ function precision(num) {
     let decDigitCount = 0;
     let tempNum = "";
     let decIndex = -1;
+    let eIndex = -1;
     for (let i = 0; i < num.length; i++) {
         if (num[i] == ".") {
             dec = true;
             decIndex = i;
             continue;
+        }
+        if (num[i] == "e") {
+            eIndex = i;
+            dec = false;
         }
         if (dec)
             decDigitCount++;
@@ -355,10 +364,12 @@ function precision(num) {
                 tempNum = num;
             else
                 tempNum = num.slice(0, i + 1);
-            break;
         }
     }
 
+    let eQuantity = "";
+    if (eIndex != -1)
+        eQuantity = num.slice(eIndex);
     
     if (decDigitCount < 11) 
         return num;
@@ -376,7 +387,7 @@ function precision(num) {
         num = parseFloat(tempNum.slice(0, (tempNum.length - 1)));
         num = num.toString();
     }
-    return num;
+    return num + eQuantity;
 }
 
 // Returns 0 if value is a mathematical operator 1 if it's a number and -1 if it's neither.

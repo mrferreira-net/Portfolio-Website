@@ -32,12 +32,15 @@ button {
     height: auto;
     margin: auto;
 }
+::placeholder {
+    color: black;
+}
 #display {
     text-wrap:wrap;
     bottom: 10px;
-    width: 295px;
-    max-width: 295px;
-    min-width: 295px;
+    width: 300px;
+    max-width: 300px;
+    min-width: 300px;
     max-height: 200px;
     min-height: 100px;
     height: 100px;

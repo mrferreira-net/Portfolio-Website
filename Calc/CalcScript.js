@@ -62,7 +62,7 @@ function read(event) {
     }
     else if (trigger == "=") {
         length = formula.length;
-        if (formula == "0" || formula == "ERROR")
+        if (formula == "0" || formula == "ERROR" || formula == "Infinity")
             return;
         else {
             parse();

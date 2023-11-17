@@ -60,7 +60,7 @@ function read(event) {
         length = formula.length;
         if (length == 0 || formula == "ERROR")
             return;
-        else if (parseFloat(formula) == 0) 
+        else if (parseFloat(formula) == 0 && formula != "0÷0") 
             formula = "";
         else {
             parse();
@@ -139,16 +139,18 @@ function read(event) {
     }
     else if (typeId(trigger) == 1 && length > 1 && (formula[length - 1] == "%" || formula[length - 1] == ")"))
         formula = formula + "x" + trigger;
-    else {
-        if (formula == "0")
+    else if (typeId(trigger) == 1){
+        if (formula == "0" || formula == "ERROR")
             formula = trigger;
+        else if (lastId == 0 && trigger == "0")
+            formula = formula + trigger;
         else {
             let naturalNumOrDecimal = false;
             for (let i = length - 1; i >= 0; i--) {
-                if (typeId(formula[i]) == 0 && formula[i] != ".") 
-                    break;
-                else if (formula[i] == "." || parseInt(formula[i]) > 0) 
+                if (formula[i] == "." || parseInt(formula[i]) > 0){
                     naturalNumOrDecimal = true;
+                    break;
+                }
             }
 
             if (trigger == "0" && naturalNumOrDecimal == false && formula[length - 1] == "0")
@@ -167,7 +169,11 @@ function read(event) {
                     continue;
                 digitCount++;
             }
-            if (digitCount < 15 && decDigitCount < 10)
+            if (length > 1 && formula[length - 1] == "0" && typeId(formula[length - 2]) == 0 && trigger == "0")
+                return;
+            else if (length > 1 && formula[length - 1] == "0" && typeId(formula[length - 2]) == 0 && trigger != "0")
+                formula = formula.slice(0, length - 1) + trigger;
+            else if (digitCount < 15 && decDigitCount < 10)
                 formula = formula + trigger;
         }
     }
@@ -416,27 +422,24 @@ function fancy () {
     length = formula.length;
     let nonFancy = ""
     let newNumStartIndex = -1;
-    let decInNum = false;
+    let decIndex = -1;
     for (let i = 0; i < length; i++) {
-        if (formula[i] != "," && decInNum == false)
+        if (formula[i] != "," && decIndex == -1)
             nonFancy = nonFancy + formula[i];
         if (formula[i] == ".") {
             decInNum = true;
             nonFancy = nonFancy.slice(0, (nonFancy.length - 1));
-            newNumStartIndex = i;
+            decIndex = i;
         }
-        if (formula[i] == "(") {
-            nonFancy = "";
-            newNumStartIndex = i;
-        }
-        if (typeId(formula[i]) == 0 || formula[i] == ")" || formula[i] == "%") {
+        if (typeId(formula[i]) == 0 || formula[i] == ")" || formula[i] == "%" || formula[i] == "(") {
             decInNum = false;
             nonFancy = "";
             newNumStartIndex = i;
-        }
-        
+            decIndex = -1;
+        } 
     }
     let nonFancyLen = nonFancy.length;
+    
 
     if (nonFancyLen > 0 && nonFancy != "0" && formula != "ERROR") {
         let fancy = "";
@@ -453,10 +456,11 @@ function fancy () {
             fancy = nonFancy[0] + fancy;
         if (nonFancyLen % 3 == 0)
             fancy = nonFancy.slice(0, 3) + fancy;
-        if (newNumStartIndex == -1) 
+
+        if (newNumStartIndex == -1 && decIndex == -1) 
             formula = fancy;
-        else if (decInNum)
-            formula = fancy + "." + formula.slice(newNumStartIndex + 1);
+        else if (decIndex != -1) 
+            formula = formula.slice(0, (newNumStartIndex + 1)) + fancy + formula.slice(decIndex);
         else
             formula = formula.slice(0, (newNumStartIndex + 1)) + fancy;
     }

@@ -1,19 +1,16 @@
 body {
     background-color: rgb(197, 233, 197);
 }
-
 .customBorder {
     border: 2px solid rgb(0, 0, 0);
     border-radius: 2%;
     padding: 10px;
     background-color: rgb(89, 95, 92);
 }
-
 table {
     position: relative;
     padding: 10px;
 }
-
 button {
     width: 80px;
     height: 80px;
@@ -57,7 +54,6 @@ button {
     text-align: center;
     font-size: larger;
 }
-
 #displayAndBackspace {
     display: flex;
     align-items: center;

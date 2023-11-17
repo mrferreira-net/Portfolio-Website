@@ -2,13 +2,13 @@ let formula = "0";
 let parsedFormula = [""];
 let parsedFormulaIndex = 0;
 let length = 0;
+let lastId = -1;
 
 // trigger function that designates the formula set-up based on button input.
 function read(event) {
     let trigger = event.srcElement.innerHTML;
     formula = document.querySelector('#display').value;
     length = formula.length;
-    let lastId = -1;
     if (length > 0)
         lastId = typeId(formula[length - 1]);
 
@@ -62,7 +62,7 @@ function read(event) {
     }
     else if (trigger == "=") {
         length = formula.length;
-        if (formula == "0" || formula == "ERROR" || formula == "Infinity")
+        if (formula == "ERROR" || formula == "Infinity")
             return;
         else {
             parse();
@@ -82,6 +82,10 @@ function read(event) {
 
         if (formula == "0") 
             formula = "(";
+        else if (formula[length - 1] == "." && sumRight == sumLeft) 
+            formula = formula.slice(0, length - 1) + "x(";
+        else if (formula[length - 1] == "." && sumRight < sumLeft)
+            formula = formula.slice(0, length - 1) + ")";
         else if (lastId != 0 && sumLeft == sumRight)
             formula = formula + "x(";
         else if (lastId == 0 && sumLeft == sumRight)
@@ -99,11 +103,13 @@ function read(event) {
         }  
     }
     else if (trigger == "%") {
+        if (formula[length - 1] == ".")
+            formula = formula.slice(0, (length - 1)) + trigger;
         if (length != 0 && lastId != 0 && formula[length - 1] != "%" && formula[length - 1] != "(")
             formula = formula + "%";
     }
     else if (trigger == ".") {
-        if (lastId == 1) {
+        if (lastId == 1 && formula[length - 1] != "%") {
             for (let i = length - 1; i >= 0; i--) {
                 if (formula[i] == ".")
                     break;
@@ -117,28 +123,38 @@ function read(event) {
                 }
             }
         }
-        else if (formula[length - 1] == ")")
+        else if (formula[length - 1] == ")" || formula[length - 1] == "%")
             formula = formula + "x0.";
         else if (formula[length - 1] != ".")
             formula = formula + "0.";
     }
     else if (typeId(trigger) == 0) {
-        if (lastId == -1 && formula[length - 1] != ")") {
+        if (formula[length - 1] == "(") {
             formula = formula;
-            if (lastId == -1 && length > 0 && (trigger == "+" || trigger == "-"))
+            if (lastId == -1 && length > 0 && trigger == "-")
                 formula = formula + trigger;
         }
         else if (lastId == 0) {
-            if ((trigger == "+" || trigger == "-") && formula[length - 2] == "(")
-                formula = formula.slice(0, (length - 1)) + trigger;
+            if ((trigger == "+" || trigger == "-") && formula[length - 2] == "(") {
+                if (trigger == "+" && formula[length - 1] == "-")
+                    formula = formula.slice(0, (length - 1));
+                else
+                    formula = formula.slice(0, (length - 1)) + trigger;
+            }
             else if ((trigger == "÷" || trigger == "x") && formula[length - 2] == "(")
                 formula = formula.slice(0, (length - 1));
             else
-            formula = formula.slice(0, (length - 1)) + trigger;
+                formula = formula.slice(0, (length - 1)) + trigger;
         }
         else {
             if (formula[length - 1] == ".")
                 formula = formula.slice(0, length - 1) + trigger;
+            else if (formula == "0" && trigger == "+")
+                return;
+            else if (formula[length - 1] == "(" && trigger == "+")
+                return;
+            else if (formula == "0" && trigger == "-")
+                formula = trigger;
             else
                 formula = formula + trigger;
         } 
@@ -186,6 +202,7 @@ function read(event) {
     
     fancy();
     document.querySelector('#display').value = formula;
+    lastId = typeId(formula[length - 1]);
     reset();
 }
 
@@ -347,10 +364,9 @@ function calculate (formula) {
 // Limits size of calculated numbers to 10 digits after the decimal,
 // this is due to Javascript's floating point number innaccuracy.
 function precision(num) {
-    if (num == "0") {
-        num = "";
+    if (num == "0")
         return num;
-    }
+    
     
 
     // Counts number of digits after the decimal

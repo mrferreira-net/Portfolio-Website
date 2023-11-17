@@ -6,11 +6,6 @@ body {
 a {
     color: rgb(129, 213, 219);
 }
-.decorate {
-    font-size: large;
-    text-decoration: underline;
-    font-weight: 600;
-}
 .center {
     margin: auto;
     width: 50%;

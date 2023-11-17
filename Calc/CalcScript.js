@@ -15,10 +15,14 @@ function read(event) {
     if (trigger == "C") 
         reset(); 
     else if (trigger == "⌫") {
-        formula = formula.slice(0, (length - 1));
-        fancy();
-        if (formula == "") 
+        if (formula == "ERROR" || formula == "Infinity")
             reset();
+        else {
+            formula = formula.slice(0, (length - 1));
+            fancy();
+            if (formula == "") 
+                reset();
+        }
     }
         
     else if (trigger == "+/-") {

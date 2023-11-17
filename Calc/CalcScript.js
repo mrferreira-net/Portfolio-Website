@@ -443,7 +443,7 @@ function fancy () {
     let nonFancyLen = nonFancy.length;
     
 
-    if (nonFancyLen > 0 && nonFancy != "0" && formula != "ERROR") {
+    if (nonFancyLen > 0 && nonFancy != "0" && formula != "ERROR" && formula != "Infinity") {
         let fancy = "";
         for (let i = nonFancyLen - 4; i >= 0; i = i - 3) {
             if (i == nonFancyLen - 4) 

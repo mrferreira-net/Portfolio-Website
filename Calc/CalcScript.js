@@ -24,7 +24,13 @@ function read(event) {
                 reset();
         }
     }
-        
+    else if (formula == "ERROR" || formula == "Infinity") 
+        return;
+    else if (trigger == "=") {
+        length = formula.length;
+        parse();
+        formula = calculate(parsedFormula);
+    }
     else if (trigger == "+/-") {
         if (formula == "0")
             formula = "(-";
@@ -71,15 +77,7 @@ function read(event) {
             }
         }
     }
-    else if (trigger == "=") {
-        length = formula.length;
-        if (formula == "ERROR" || formula == "Infinity")
-            return;
-        else {
-            parse();
-            formula = calculate(parsedFormula);
-        }
-    }
+    
     else if (trigger == "( )") {
         let sumLeft = 0;
         let sumRight = 0;

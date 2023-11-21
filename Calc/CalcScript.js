@@ -219,13 +219,31 @@ function read(event) {
 
 // Parses the formula to be later solved.
 function parse () {
+    let parsedFormulaLen = parsedFormula.length;
     for (let i = 0; i < length; i++) {
         if (typeId(formula[i]) == 1) 
             if (formula[i] == "%") {
-                next();
-                parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex - 1];
-                parsedFormula[parsedFormulaIndex - 1] = "(";
-                next();
+                if (parsedFormula[parsedFormulaIndex - 1] == ")") {
+                    parsedFormulaLen = parsedFormula.length;
+                    let closedCount = 0;
+                    let openIndex = -1;
+                    for (let j = parsedFormulaLen - 1; j >= 0; j--) {
+                        if (parsedFormula[j] == ")")
+                            closedCount++;
+                        else if (parsedFormula[j] == "(" && closedCount == 1) 
+                            openIndex = j;
+                        else if (parsedFormula[j] == "(") 
+                            closedCount--;
+                    }
+                    parsedFormula.splice(openIndex, 0, "(");
+                    parsedFormulaIndex++;
+                }
+                else {
+                    next();
+                    parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex - 1];
+                    parsedFormula[parsedFormulaIndex - 1] = "(";
+                    next();
+                }
                 parsedFormula[parsedFormulaIndex] = "/";
                 next();
                 parsedFormula[parsedFormulaIndex] = "100";
@@ -263,7 +281,7 @@ function parse () {
                 parsedFormula[parsedFormulaIndex] = ")"; 
         } 
     }
-    let parsedFormulaLen = parsedFormula.length;
+    parsedFormulaLen = parsedFormula.length;
     for (let i = 0; i < parsedFormulaLen; i++) {
         parsedFormulaLen = parsedFormula.length;
         if (parsedFormula[i] == "/" && parsedFormula[i - 1] != ")" && parsedFormula[i + 1] != "(") {
@@ -457,8 +475,12 @@ function precision(num) {
             if (tempNum[0] == "-")
                 tempNum = parseInt(tempNum) - 1;
             else
-             tempNum = parseInt(tempNum) + 1;
+                tempNum = parseInt(tempNum) + 1;
             tempNum = tempNum.toString();
+        }
+        else if (parseInt(newVal) % 10 == 0) {
+            for (let i = 0; i < (decDigitCount - nonZeroDecDigitCount - 1); i++)
+                tempNum = tempNum + "0";
         }
         else {
             for (let i = 0; i < (decDigitCount - nonZeroDecDigitCount); i++)

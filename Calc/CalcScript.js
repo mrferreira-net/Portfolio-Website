@@ -461,7 +461,7 @@ function precision(num) {
             tempNum = tempNum.toString();
         }
         else {
-            for (let i = 0; i < (decDigitCount - nonZeroDecDigitCount - 1); i++)
+            for (let i = 0; i < (decDigitCount - nonZeroDecDigitCount); i++)
                 tempNum = tempNum + "0";
         }
         num = tempNum + newVal + eQuantity;

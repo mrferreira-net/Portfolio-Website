@@ -463,11 +463,16 @@ function precision(num) {
     
     if (parseInt(tempNum[tempNum.length - 1]) > 4){
         let newVal = 0;
-        if (nonZeroIndex == (tempNum.length - 1))
-            newVal = parseInt(tempNum.slice(nonZeroIndex - 1)) + 1;
-        else
-            newVal = parseInt(tempNum.slice(nonZeroIndex, (tempNum.length - 1))) + 1;
+        let preRoundLen = 0;
+        let postRoundLen = 0;
+        if (nonZeroIndex == (tempNum.length - 1)) 
+            newVal = tempNum.slice(nonZeroIndex - 1);
+        else 
+            newVal = tempNum.slice(nonZeroIndex, (tempNum.length - 1));
+        preRoundLen = newVal.length;
+        newVal = parseInt(newVal) + 1;
         newVal = newVal.toString();
+        postRoundLen = newVal.length;
 
         tempNum = tempNum.slice(0, (decIndex + 1));
         if (newVal.length > 10) {
@@ -478,7 +483,7 @@ function precision(num) {
                 tempNum = parseInt(tempNum) + 1;
             tempNum = tempNum.toString();
         }
-        else if (parseInt(newVal) % 10 == 0) {
+        else if (postRoundLen > preRoundLen) {
             for (let i = 0; i < (decDigitCount - nonZeroDecDigitCount - 1); i++)
                 tempNum = tempNum + "0";
         }

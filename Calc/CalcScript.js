@@ -53,13 +53,20 @@ function read(event) {
                         formula = formula + "(-";
                 }
                 else if (formula[i] == "-" && i > 0) {
-                    if (formula[i - 1] == "(")
+                    if (formula[i - 1] == "e")
+                            continue;
+                    else if (formula[i - 1] == "(")
                         formula = formula.slice(0, (i - 1)) + formula.slice(i + 1);
                     else
                         formula = formula.slice(0, (i + 1)) + "(-" + formula.slice(i + 1);
                 }
-                else
+                else {
+                    if (i - 1 >= 0) {
+                        if (formula[i - 1] == "e")
+                            continue;
+                    }
                     formula = formula.slice(0, (i + 1)) + "(-" + formula.slice(i + 1);
+                } 
                 break;
             }
         }
@@ -122,6 +129,10 @@ function read(event) {
                 else if (typeId(formula[i]) == 1)
                     continue;
                 else {
+                    if (i > 0) {
+                        if (formula[i - 1] == "e")
+                            break;
+                    }
                     formula = formula + ".";
                     break;
                 }
@@ -226,9 +237,6 @@ function parse () {
             else if (formula[i] == ",") 
                 continue;
             else if (formula[i] == "e") {
-                next();
-                parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex - 1];
-                parsedFormula[parsedFormulaIndex - 1] = "(";
                 parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex] + "e" + formula[i + 1];
                 i++;
             }
@@ -366,12 +374,12 @@ function calculate (formula) {
 function precision(num) {
     if (num == "0")
         return num;
-    
-    
 
     // Counts number of digits after the decimal
     let dec = false;
     let decDigitCount = 0;
+    let nonZeroDecDigitCount = 0;
+    let nonZeroIndex = -1;
     let tempNum = "";
     let decIndex = -1;
     let eIndex = -1;
@@ -383,10 +391,18 @@ function precision(num) {
         }
         if (num[i] == "e") {
             eIndex = i;
+            if (dec == false)
+                return num;
             dec = false;
         }
-        if (dec)
+        if (dec) {
             decDigitCount++;
+            if (num[i] != "0" && nonZeroIndex == -1) 
+                nonZeroIndex = i;
+            if (nonZeroIndex != -1 && eIndex == -1)
+                nonZeroDecDigitCount++;  
+        }
+            
         if (decDigitCount == 11) {
             if ((i + 1) > (num.length - 1)) 
                 tempNum = num;
@@ -395,26 +411,59 @@ function precision(num) {
         }
     }
 
-    let eQuantity = "";
-    if (eIndex != -1)
-        eQuantity = num.slice(eIndex);
     
-    if (decDigitCount < 11) 
-        return num;
-    else if (parseInt(tempNum[tempNum.length - 1]) > 4) {
-        let newVal = parseInt(tempNum.slice(decIndex + 1, (tempNum.length - 1))) + 1;
-        newVal = newVal.toString();
-        if (newVal.length == 11) {
-            num = parseInt(tempNum.slice(0, decIndex)) + 1;
-            num = num.toString();
+
+    let eQuantity = "";
+    if (eIndex != -1) {
+        eQuantity = num.slice(eIndex);
+        let exponent = parseInt(num.slice(eIndex + 1))
+        if (exponent < 0) {
+            exponent = -(exponent);
+            let baseNum = 0;
+            if (eIndex < 12)
+                baseNum = Math.abs(num.slice(0, eIndex));
+            
+            else if (num[0] == "-") 
+                baseNum = num.slice(1, 13);
+            else
+                baseNum = num.slice(0, 12);
+            if (baseNum[1] == ".")
+                baseNum = baseNum.slice(0, 1) + baseNum.slice(2);
+            else if (baseNum[2] == ".")
+                baseNum = baseNum.slice(0, 2) + baseNum.slice(3);
+            
+            for (let i = 0; i < (exponent - 1); i++) 
+                baseNum = "0" + baseNum;
+    
+            if (baseNum.length > 11) 
+                baseNum = baseNum.slice(0, 11);
+            
+            if (num[0] == "-") 
+                baseNum = "-0." + baseNum;
+            else 
+                baseNum = "0." + baseNum;
+            tempNum = precision(baseNum);
+            return tempNum;
         }
-        else 
-            num = tempNum.slice(0, decIndex) + "." + newVal;
-    }
-    else {
+    }   
+    
+    else if (decDigitCount < 11) 
+        return num + eQuantity;
+    else if (parseInt(tempNum[tempNum.length - 1]) > 4){
+        let newVal = 0;
+        if (nonZeroIndex == (tempNum.length - 1))
+            newVal = parseInt(tempNum.slice(nonZeroIndex)) + 1;
+        else
+            newVal = parseInt(tempNum.slice(nonZeroIndex, (tempNum.length - 1))) + 1;
+        newVal = newVal.toString();
+        tempNum = tempNum.slice(0, (decIndex + 1));
+        for (let i = 0; i < (decDigitCount - nonZeroDecDigitCount - 1); i++)
+            tempNum = tempNum + "0";
+        num = tempNum + newVal;
+    }   
+    else 
         num = parseFloat(tempNum.slice(0, (tempNum.length - 1)));
-        num = num.toString();
-    }
+    num = num.toString();
     return num + eQuantity;
 }
 

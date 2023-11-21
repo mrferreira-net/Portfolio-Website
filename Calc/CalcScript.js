@@ -416,53 +416,62 @@ function precision(num) {
     let eQuantity = "";
     if (eIndex != -1) {
         eQuantity = num.slice(eIndex);
-        let exponent = parseInt(num.slice(eIndex + 1))
-        if (exponent < 0) {
-            exponent = -(exponent);
-            let baseNum = 0;
-            if (eIndex < 12)
-                baseNum = Math.abs(num.slice(0, eIndex));
-            
-            else if (num[0] == "-") 
-                baseNum = num.slice(1, 13);
+        let newVal = 0;
+        if (tempNum.slice(decIndex + 1).length > 3) 
+            newVal = tempNum.slice((decIndex + 1), (decIndex + 4));
+        else if (tempNum.slice(decIndex + 1).length == 3)
+            newVal = tempNum.slice(decIndex + 1);
+        else
+            return tempNum + eQuantity;
+
+        if (parseInt(newVal[newVal.length - 1]) > 4) 
+            newVal = parseInt(newVal.slice(0, 2)) + 1;
+        else
+            newVal = parseInt(newVal.slice(0, 2));
+        newVal = newVal.toString();
+
+        tempNum = tempNum.slice(0, (decIndex + 1));
+        if (newVal.length > 2) {
+            newVal = ""
+            if (tempNum[0] == "-")
+                tempNum = parseInt(tempNum) - 1;
             else
-                baseNum = num.slice(0, 12);
-            if (baseNum[1] == ".")
-                baseNum = baseNum.slice(0, 1) + baseNum.slice(2);
-            else if (baseNum[2] == ".")
-                baseNum = baseNum.slice(0, 2) + baseNum.slice(3);
-            
-            for (let i = 0; i < (exponent - 1); i++) 
-                baseNum = "0" + baseNum;
-    
-            if (baseNum.length > 11) 
-                baseNum = baseNum.slice(0, 11);
-            
-            if (num[0] == "-") 
-                baseNum = "-0." + baseNum;
-            else 
-                baseNum = "0." + baseNum;
-            tempNum = precision(baseNum);
-            return tempNum;
+             tempNum = parseInt(tempNum) + 1;
+             tempNum = tempNum.toString();
         }
+        else
+            num = tempNum.slice(0, decIndex + 1) + newVal.toString() + eQuantity;
+        num = tempNum + newVal + eQuantity;
+        return num;
     }   
     
     if (parseInt(tempNum[tempNum.length - 1]) > 4){
         let newVal = 0;
         if (nonZeroIndex == (tempNum.length - 1))
-            newVal = parseInt(tempNum.slice(nonZeroIndex)) + 1;
+            newVal = parseInt(tempNum.slice(nonZeroIndex - 1)) + 1;
         else
             newVal = parseInt(tempNum.slice(nonZeroIndex, (tempNum.length - 1))) + 1;
         newVal = newVal.toString();
+
         tempNum = tempNum.slice(0, (decIndex + 1));
-        for (let i = 0; i < (decDigitCount - nonZeroDecDigitCount - 1); i++)
-            tempNum = tempNum + "0";
-        num = tempNum + newVal;
+        if (newVal.length > 10) {
+            newVal = "";
+            if (tempNum[0] == "-")
+                tempNum = parseInt(tempNum) - 1;
+            else
+             tempNum = parseInt(tempNum) + 1;
+            tempNum = tempNum.toString();
+        }
+        else {
+            for (let i = 0; i < (decDigitCount - nonZeroDecDigitCount - 1); i++)
+                tempNum = tempNum + "0";
+        }
+        num = tempNum + newVal + eQuantity;
     }   
     else 
         num = parseFloat(tempNum.slice(0, (tempNum.length - 1)));
     num = num.toString();
-    return num + eQuantity;
+    return num;
 }
 
 // Returns 0 if value is a mathematical operator 1 if it's a number and -1 if it's neither.

@@ -410,9 +410,9 @@ function precision(num) {
                 tempNum = num.slice(0, i + 1);
         }
     }
-
+    if (decDigitCount < 11) 
+        return num;
     
-
     let eQuantity = "";
     if (eIndex != -1) {
         eQuantity = num.slice(eIndex);
@@ -447,9 +447,7 @@ function precision(num) {
         }
     }   
     
-    else if (decDigitCount < 11) 
-        return num + eQuantity;
-    else if (parseInt(tempNum[tempNum.length - 1]) > 4){
+    if (parseInt(tempNum[tempNum.length - 1]) > 4){
         let newVal = 0;
         if (nonZeroIndex == (tempNum.length - 1))
             newVal = parseInt(tempNum.slice(nonZeroIndex)) + 1;

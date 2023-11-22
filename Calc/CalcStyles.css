@@ -74,6 +74,8 @@ button {
 
 #histContainer {
     border: 2px solid black;
-    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
     padding: 5px;
+    max-height: 600px;
 }

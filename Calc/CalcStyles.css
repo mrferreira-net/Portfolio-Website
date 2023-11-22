@@ -77,5 +77,7 @@ button {
     min-width: 300px;
     max-width: 300px;
     padding: 5px;
-    max-height: 600px;
+    height: 560px;
+    border-radius: 1%;
+    overflow: scroll;
 }

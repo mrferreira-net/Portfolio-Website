@@ -33,6 +33,7 @@ function read(event) {
         parse();
         formula = calculate(parsedFormula);
         savedCalculations.push(formula);
+        showCalcHistory();
     }
     else if (trigger == "+/-") {
         if (formula == "0")
@@ -222,20 +223,14 @@ function read(event) {
     reset();
 }
 
-let clicked = false;
-function showCalcHistory() {
-    clicked = !clicked;
-    if (clicked) {
-        let calcLen = savedCalculations.length;
-        for (let i = 0; i < calcLen; i++) {
-            let node = document.createElement("li");
-            let specNode = document.createTextNode(savedCalculations[i]);
-            node.appendChild(specNode)
-            document.getElementById('histContainer').appendChild(node);
-        }
-    }
-    else {
 
+function showCalcHistory() {
+    let calcLen = savedCalculations.length;
+    for (let i = 0; i < calcLen; i++) {
+        let node = document.createElement("li");
+        let specNode = document.createTextNode(savedCalculations[i]);
+        node.appendChild(specNode)
+        document.getElementById('histContainer').appendChild(node);
     }
 }
 

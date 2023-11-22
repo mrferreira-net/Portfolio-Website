@@ -29,6 +29,7 @@ button {
     width: 410px;
     height: auto;
     margin: auto;
+    left: 20px;
 }
 ::placeholder {
     color: black;
@@ -67,8 +68,12 @@ button {
 
 #calcAndHist {
     display: flex;
+    margin: auto;
+    width: 800px;
 }
 
 #histContainer {
+    border: 2px solid black;
     width: 300px;
+    padding: 5px;
 }

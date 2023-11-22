@@ -29,7 +29,6 @@ button {
     width: 410px;
     height: auto;
     margin: auto;
-    left: 20px;
 }
 ::placeholder {
     color: black;
@@ -71,13 +70,14 @@ button {
     margin: auto;
     width: 800px;
 }
-
 #histContainer {
+    position: relative;
     border: 2px solid black;
-    min-width: 300px;
-    max-width: 300px;
+    width: 300px;
+    width: 300px;
     padding: 5px;
     height: 560px;
-    border-radius: 1%;
+    border-radius: 2%;
     overflow: scroll;
+    left: 20px;
 }

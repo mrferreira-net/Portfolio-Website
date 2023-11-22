@@ -3,6 +3,7 @@ let parsedFormula = [""];
 let parsedFormulaIndex = 0;
 let length = 0;
 let lastId = -1;
+let savedCalculations = [];
 
 // trigger function that designates the formula set-up based on button input.
 function read(event) {
@@ -28,8 +29,10 @@ function read(event) {
         return;
     else if (trigger == "=") {
         length = formula.length;
+        savedCalculations.push(formula);
         parse();
         formula = calculate(parsedFormula);
+        savedCalculations.push(formula);
     }
     else if (trigger == "+/-") {
         if (formula == "0")
@@ -198,7 +201,8 @@ function read(event) {
                 }
                 else if (formula[i] == ",")
                     continue;
-                digitCount++;
+                if (typeId(formula[i]) == 1)
+                    digitCount++;
             }
             if (length > 1 && formula[length - 1] == "0" && typeId(formula[length - 2]) == 0 && trigger == "0")
                 return;
@@ -211,11 +215,32 @@ function read(event) {
     
     fancy();
     document.querySelector('#display').value = formula;
-    lastId = typeId(formula[length - 1]);
+    if (formula[length - 1] == "\n")
+        lastId = typeId(formula[length - 2]);
+    else
+        lastId = typeId(formula[length - 1]);
     reset();
 }
 
+let clicked = false;
+function showCalcHistory() {
+    clicked = !clicked;
+    if (clicked) {
+        let calcLen = savedCalculations.length;
+        for (let i = 0; i < calcLen; i++) {
+            let node = document.createElement("li");
+            let specNode = document.createTextNode(savedCalculations[i]);
+            node.appendChild(specNode)
+            document.getElementById('histContainer').appendChild(node);
+        }
+    }
+    else {
+
+    }
+}
+
 //-------------------------------NON-MAIN FUNCTIONS-------------------------------
+
 
 // Parses the formula to be later solved.
 function parse () {
@@ -452,8 +477,8 @@ function precision(num) {
             if (tempNum[0] == "-")
                 tempNum = parseInt(tempNum) - 1;
             else
-             tempNum = parseInt(tempNum) + 1;
-             tempNum = tempNum.toString();
+                tempNum = parseInt(tempNum) + 1;
+                tempNum = tempNum.toString();
         }
         else
             num = tempNum.slice(0, decIndex + 1) + newVal.toString() + eQuantity;
@@ -520,9 +545,34 @@ function typeId (value) {
         return lastId;
 }
 
-// Adds commas for every 3 integer digits
+// Adds commas for every 3 integer digits, adds line breaks
 function fancy () {
     length = formula.length;
+    if (formula[length - 1] == "\n") 
+        formula = formula.slice(0, (length - 1));
+
+    let unbrokenChars = 0;
+    for (let i = 0; i < length; i++) {
+        if (formula[i] != "\n")
+            unbrokenChars++;
+        else
+            unbrokenChars = 0;
+
+        if (unbrokenChars > 20) {
+            for (let j = i; j >= 0; j--) {
+                if (typeId(formula[j]) == 0 || formula[j] == "(" || formula[j] == ")") {
+                    formula = formula.slice(0, j) + "\n" + formula.slice(j);
+                    i--;
+                    length++;
+                    unbrokenChars = 0;
+                    break;
+                }
+            }
+        }
+    }
+    
+    
+
     let nonFancy = ""
     let newNumStartIndex = -1;
     let decIndex = -1;

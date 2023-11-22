@@ -26,7 +26,7 @@ button {
 #calc {
     position: relative;
     text-align: center;
-    width: 390px;
+    width: 410px;
     height: auto;
     margin: auto;
 }
@@ -34,14 +34,11 @@ button {
     color: black;
 }
 #display {
-    text-wrap:wrap;
+    text-wrap: nowrap;
     bottom: 10px;
-    width: 330px;
-    max-width: 330px;
-    min-width: 330px;
-    max-height: 200px;
+    min-width: 340px;
+    resize: none;
     min-height: 100px;
-    height: 100px;
     font-size: 30px;
     text-align: right;
     border: 2px solid;
@@ -54,16 +51,24 @@ button {
     text-align: center;
     font-size: larger;
 }
-#displayAndBackspace {
+#displayAndSideButtons {
     display: flex;
     align-items: center;
     position: relative;
     width: 100%;
 }
-#backspace {
+#backspace, #history {
     position: relative;
     left: 6px;
     width: 50px;
     height: 50px;
     font-size: 20px;
+}
+
+#calcAndHist {
+    display: flex;
+}
+
+#histContainer {
+    width: 300px;
 }

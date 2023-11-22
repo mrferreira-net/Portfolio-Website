@@ -15,7 +15,7 @@
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <script src="CalcScript.js"></script>
+        <script src="CalcScript.js" defer></script>
         <link rel="stylesheet" href="CalcStyles.css">
     </head>
     <body>
@@ -28,7 +28,7 @@
             <form action="">
                 <div class="customBorder" id="calc">
                     <div id="displayAndSideButtons">
-                        <textarea type="text" id="display" readonly>0</textarea>
+                        <textarea type="text" id="display" autofocus placeholder="0"></textarea>
                         <div>
                             <button type="button" onclick="read(event)" id="backspace">⌫</button>
                         </div>
@@ -127,7 +127,14 @@
                     </table>
                 </div>
             </form>
+            <button type="button" onclick="calcHistory(event)" id="showHistory">&#128269</button>
             <div id="histContainer">
+                <div id="histTitle">
+                    History
+                </div>
+                <button type="button" onclick="calcHistory(event)" id="hideHistory">-</button>
+                <button type="button" onclick="calcHistory(event)" id="clearHistory">C</button>
+                <br>
             </div>
         </div>
         <br>

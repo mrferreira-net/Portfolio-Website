@@ -43,7 +43,7 @@ function read(event) {
         if (formula == "0")
             formula = "(-";
         else if (formula == "(-")
-            formula = "";
+            formula = "0";
         else {
             for (let i = length - 1; i >= 0; i--) {
                 if (typeId(formula[i]) == 1 && i > 0) {

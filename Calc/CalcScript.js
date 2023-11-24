@@ -288,8 +288,9 @@ function preCalc (formula) {
         parse(formula)
         formula = calculate(parsedFormula)
         formula = fancy(formula)
-        
     }
+    if (formula == "ERROR")
+        formula = ""
     document.querySelector('#answerDisplay').value = "= " + formula
     formula = "0"
     parsedFormula = [""]

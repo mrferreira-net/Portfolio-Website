@@ -394,12 +394,12 @@ function parse (formula) {
                 parsedFormula[parsedFormulaIndex] = "/";
             else if (formula[i] == "(" && i < (length - 1)) 
                 parsedFormula[parsedFormulaIndex] = "(";  
-            else if (formula[i] == "(" && i == (length - 1)) {
+            else if (formula[i] == ")") 
+                parsedFormula[parsedFormulaIndex] = ")";
+            else if (i == (length - 1)) {
                 parsedFormula = "ERROR"
                 return
             }  
-            else if (formula[i] == ")") 
-                parsedFormula[parsedFormulaIndex] = ")"; 
         } 
     }
     parsedFormulaLen = parsedFormula.length;

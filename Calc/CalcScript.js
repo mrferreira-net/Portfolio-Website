@@ -553,27 +553,9 @@ function precision(num) {
         }
     }
 
-
     let eQuantity = "";
-    if (eIndex != -1) {
-        if (tempNum == "")
-            tempNum = num.slice(0, eIndex)
+    if (eIndex != -1) 
         eQuantity = num.slice(eIndex);
-    }   
-
-    
-    
-    
-
-    if (decIndex != -1) {
-        if (eIndex != -1) {
-            if (tempNum.slice(decIndex + 1, eIndex).length < 11)
-                return (tempNum + eQuantity)
-        }
-        else if (tempNum.slice(decIndex + 1).length < 11) 
-            return tempNum
-    }
-    
     
     if (tempNum != "") {
         if (parseInt(tempNum[tempNum.length - 1]) > 4){
@@ -610,7 +592,6 @@ function precision(num) {
             num = parseFloat(tempNum.slice(0, (tempNum.length - 1))) + eQuantity;
         num = num.toString();
     }
-
 
     if (decIndex != -1 && digitCount > 15 && eIndex == -1) {
         let i = length - 1

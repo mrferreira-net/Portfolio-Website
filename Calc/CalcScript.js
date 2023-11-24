@@ -310,7 +310,7 @@ function appendHistory (string) {
     list.appendChild(button)
     container.appendChild(list)
 
-    
+    container.scrollTop = container.scrollHeight
 }
 
 function useHistory (event) {

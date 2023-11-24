@@ -9,14 +9,13 @@ function read(event) {
     let trigger = event.srcElement.innerHTML
     formula = document.querySelector('#display').value
     length = formula.length
-
     if (length > 0)
         lastId = typeId(formula[length - 1])
 
     if (trigger == "C") 
         reset()
     else if (trigger == "⌫") {
-        if (formula == "ERROR" || formula == "Infinity")
+        if (formula == "ERROR" || formula == "Infinity" || formula == "-Infinity")
             reset();
         else {
             formula = formula.slice(0, (length - 1));
@@ -25,7 +24,7 @@ function read(event) {
                 reset();
         }
     }
-    else if (formula == "ERROR" || formula == "Infinity") 
+    else if (formula == "ERROR" || formula == "Infinity" || formula == "-Infinity") 
         return
     else if (trigger == "=") {
         length = formula.length
@@ -35,8 +34,8 @@ function read(event) {
         formula = fancy(formula)
         let postFormula = formula
         if (preFormula != postFormula && formula != "ERROR") {
-            appendHistory(preFormula + "=")
-            appendHistory(postFormula)
+            appendHistory(preFormula)
+            appendHistory("=" + postFormula)
         }
     }
     else if (trigger == "+/-") {
@@ -198,8 +197,14 @@ function read(event) {
             let digitCount = 0;
             let decDigitCount = 0;
             for (let i = length - 1; i >= 0; i--) {
-                if (typeId(formula[i]) == 0 && formula[i] != ".") 
-                    break;
+                if (typeId(formula[i]) == 0) {
+                    if (i > 0) {
+                        if (formula[i - 1] != "e")
+                            break;
+                    }
+                    else
+                        break;
+                }  
                 else if (formula[i] == ".") {
                     decDigitCount = digitCount;
                     continue;
@@ -218,15 +223,21 @@ function read(event) {
         }
     }
     
+    
     formula = fancy(formula)
     document.querySelector('#display').value = formula
     if (formula[length - 1] == "\n")
         lastId = typeId(formula[length - 2])
     else
         lastId = typeId(formula[length - 1])
+    if (trigger == "=" || trigger == "C" || formula == "0")
+        preCalc("=")
+    else
+        preCalc(formula)
     reset()
 }
 
+// History container button functionalities
 function calcHistory(event) {
     let trigger = event.srcElement.innerHTML
     if (trigger == "🔍") {
@@ -245,11 +256,33 @@ function calcHistory(event) {
     
 }
 
+// Automatically shows a preview of the current calculation being typed
+function preCalc (formula) {
+    if (formula == "=") 
+        formula = ""
+    else {
+        length = formula.length
+        parse(formula)
+        formula = calculate(parsedFormula)
+        formula = fancy(formula)
+        
+    }
+    document.querySelector('#answerDisplay').value = "= " + formula
+}
+
+// Adds calculations to history container
 function appendHistory (string) {
     let node = document.createElement("li")
     let specNode = document.createTextNode(string)
     node.appendChild(specNode)
-    document.getElementById('histContainer').appendChild(node)  
+    document.getElementById('histContainer').appendChild(node)
+}
+
+function buttonClick(event) {
+    event.srcElement.style.backgroundColor = "rgb(143, 143, 143)";
+    let changeColorBack = setInterval(function () {
+        event.srcElement.style.backgroundColor = "rgb(255, 255, 255)";
+    }, 100);
 }
 
 //-------------------------------NON-MAIN FUNCTIONS-------------------------------
@@ -425,11 +458,12 @@ function calculate (formula) {
         else if (formula[i] == "-") 
             sub = true; 
     }
-    return calculation.toString();
+    return precision(calculation.toString());
 }
 
 // Limits size of calculated numbers to 10 digits after the decimal,
 // this is due to Javascript's floating point number innaccuracy.
+// Limits size of calculated numbers to 15 digits total.
 function precision(num) {
     if (num == "0")
         return num;
@@ -469,11 +503,11 @@ function precision(num) {
                 tempNum = num.slice(0, i + 1);
         }
     }
-    if (decDigitCount < 11) 
-        return num;
     
     let eQuantity = "";
     if (eIndex != -1) {
+        if (tempNum == "")
+            tempNum = num.slice(0, eIndex)
         eQuantity = num.slice(eIndex);
         let newVal = 0;
         if (tempNum.slice(decIndex + 1).length > 3) 
@@ -504,41 +538,81 @@ function precision(num) {
         return num;
     }   
     
-    if (parseInt(tempNum[tempNum.length - 1]) > 4){
-        let newVal = 0;
-        let preRoundLen = 0;
-        let postRoundLen = 0;
-        if (nonZeroIndex == (tempNum.length - 1)) 
-            newVal = tempNum.slice(nonZeroIndex - 1);
+    if (tempNum != "") {
+        if (parseInt(tempNum[tempNum.length - 1]) > 4){
+            let newVal = 0;
+            let preRoundLen = 0;
+            let postRoundLen = 0;
+            if (nonZeroIndex == (tempNum.length - 1)) 
+                newVal = tempNum.slice(nonZeroIndex - 1);
+            else 
+                newVal = tempNum.slice(nonZeroIndex, (tempNum.length - 1));
+            preRoundLen = newVal.length;
+            newVal = parseInt(newVal) + 1;
+            newVal = newVal.toString();
+            postRoundLen = newVal.length;
+    
+            tempNum = tempNum.slice(0, (decIndex + 1));
+            if (newVal.length > 10) {
+                newVal = "";
+                if (tempNum[0] == "-")
+                    tempNum = parseInt(tempNum) - 1;
+                else
+                    tempNum = parseInt(tempNum) + 1;
+                tempNum = tempNum.toString();
+            }
+            else if (postRoundLen > preRoundLen) {
+                for (let i = 0; i < (decDigitCount - nonZeroDecDigitCount - 1); i++)
+                    tempNum = tempNum + "0";
+            }
+            else {
+                for (let i = 0; i < (decDigitCount - nonZeroDecDigitCount); i++)
+                    tempNum = tempNum + "0";
+            }
+            num = tempNum + newVal + eQuantity;
+        }   
         else 
-            newVal = tempNum.slice(nonZeroIndex, (tempNum.length - 1));
-        preRoundLen = newVal.length;
-        newVal = parseInt(newVal) + 1;
-        newVal = newVal.toString();
-        postRoundLen = newVal.length;
+            num = parseFloat(tempNum.slice(0, (tempNum.length - 1)));
+        num = num.toString();
+    }
 
-        tempNum = tempNum.slice(0, (decIndex + 1));
-        if (newVal.length > 10) {
-            newVal = "";
-            if (tempNum[0] == "-")
-                tempNum = parseInt(tempNum) - 1;
-            else
-                tempNum = parseInt(tempNum) + 1;
-            tempNum = tempNum.toString();
+    let length = num.length
+    decIndex = -1
+    let digitCount = 0
+    for (let i = 0; i < length; i++) {
+        if (!isNaN(parseInt(num[i])))
+            digitCount++
+        else if (num[i] == ".")
+            decIndex = i
+    }
+    if (decIndex != -1 && digitCount > 15) {
+        let i = length - 1
+        while (digitCount > 15) {
+            if (!isNaN(parseInt(num[i]))) {
+                num = num.slice(0, (length - 1))
+                digitCount--;
+            }
+            else if (num[i] == ".")
+                break;
+            i--
         }
-        else if (postRoundLen > preRoundLen) {
-            for (let i = 0; i < (decDigitCount - nonZeroDecDigitCount - 1); i++)
-                tempNum = tempNum + "0";
+    }
+    if (digitCount > 15) {
+        let negSign = false
+        if (num[0] == "-") {
+            negSign = true
+            num = num.slice(1)
         }
-        else {
-            for (let i = 0; i < (decDigitCount - nonZeroDecDigitCount); i++)
-                tempNum = tempNum + "0";
-        }
-        num = tempNum + newVal + eQuantity;
-    }   
-    else 
-        num = parseFloat(tempNum.slice(0, (tempNum.length - 1)));
-    num = num.toString();
+        num = num.slice(0, 4)
+        if (num[3] > 4) 
+            num = parseInt(num.slice(0, 3)) + 1;
+        else 
+            num = parseInt(num.slice(0, 3))
+        num = num.toString()
+        num = num.slice(0, 1) + "." + num.slice(1) + "e+" + (digitCount - 1).toString()
+        if (negSign == true)
+            num = "-" + num
+    }
     return num;
 }
 
@@ -579,14 +653,16 @@ function fancy (formula) {
         else
             unbrokenChars = 0;
 
-        if (unbrokenChars > 20) {
+        if (unbrokenChars > 22) {
             for (let j = i; j >= 0; j--) {
                 if (typeId(formula[j]) == 0 || formula[j] == "(" || formula[j] == ")") {
-                    formula = formula.slice(0, j) + "\n" + formula.slice(j);
-                    i--;
-                    length++;
-                    unbrokenChars = 0;
-                    break;
+                    if (j != 0) {
+                        formula = formula.slice(0, j) + "\n" + formula.slice(j);
+                        i--;
+                        length++;
+                        unbrokenChars = 0;
+                        break;
+                    }
                 }
             }
         }
@@ -615,7 +691,7 @@ function fancy (formula) {
     let nonFancyLen = nonFancy.length;
     
 
-    if (nonFancyLen > 0 && nonFancy != "0" && formula != "ERROR" && formula != "Infinity") {
+    if (nonFancyLen > 0 && nonFancy != "0" && formula != "ERROR" && formula != "Infinity" && formula != "-Infinity") {
         let fancy = "";
         for (let i = nonFancyLen - 4; i >= 0; i = i - 3) {
             if (i == nonFancyLen - 4) 

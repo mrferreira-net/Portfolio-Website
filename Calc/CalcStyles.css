@@ -12,6 +12,7 @@ table {
     padding: 10px;
 }
 button {
+    background-color: rgb(255, 255, 255);
     width: 80px;
     height: 80px;
     border-style: outset;
@@ -33,6 +34,7 @@ button {
 ::placeholder {
     color: black;
 }
+
 #display {
     text-wrap: nowrap;
     bottom: 10px;
@@ -42,8 +44,25 @@ button {
     font-size: 30px;
     text-align: right;
     border: 2px solid;
+    border-bottom: none;
     font-family: Arial, Helvetica, sans-serif;
 }
+
+#answerDisplay {
+    position: relative;
+    text-wrap: nowrap;
+    min-width: 340px;
+    resize: none;
+    min-height: 40px;
+    max-height: 40px;
+    font-size: 30px;
+    text-align: right;
+    border: 2px solid;
+    border-top: none;
+    font-family: Arial, Helvetica, sans-serif;
+    bottom: 4px;
+}
+
 #footnote {
     position: relative;
     bottom: 0;
@@ -77,12 +96,12 @@ button {
     border: 2px solid black;
     width: 300px;
     padding: 5px;
-    height: 560px;
+    height: 613px;
     border-radius: 2%;
     overflow: scroll;
     left: 20px;
     font-size: larger;
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(255, 255, 255);
 }
 
 #showHistory {

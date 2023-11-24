@@ -3,6 +3,7 @@ let parsedFormula = [""]
 let parsedFormulaIndex = 0
 let length = 0
 let lastId = -1
+let preFormula = ""
 
 // trigger function that designates the formula set-up based on button input.
 function read(event) {
@@ -28,7 +29,32 @@ function read(event) {
         return
     else if (trigger == "=") {
         length = formula.length
-        let preFormula = formula
+        let operationPresent = false;
+        for (let i = 0; i < length; i++) {
+            if (formula[i] == "e") {
+                i++
+                continue
+            }
+            if (typeId(formula[i]) == 0) {
+                if (i == 0) 
+                    continue
+                
+                operationPresent = true
+                break
+            }   
+        }
+        let lastOperation = ""
+        if (operationPresent == false) {
+            let preFormulaLen = preFormula.length
+            for (let i = preFormulaLen - 1; i >= 0; i--) {
+                if (typeId(preFormula[i]) == 0) {
+                    lastOperation = preFormula.slice(i)
+                    break
+                }
+            }
+            formula = formula + lastOperation
+        }
+        preFormula = formula
         parse(formula)
         formula = calculate(parsedFormula)
         formula = fancy(formula)
@@ -234,7 +260,6 @@ function read(event) {
         preCalc("=")
     else
         preCalc(formula)
-    reset()
 }
 
 // History container button functionalities
@@ -268,6 +293,9 @@ function preCalc (formula) {
         
     }
     document.querySelector('#answerDisplay').value = "= " + formula
+    formula = "0"
+    parsedFormula = [""]
+    parsedFormulaIndex = 0
 }
 
 // Adds calculations to history container
@@ -722,6 +750,7 @@ function reset () {
     formula = "0"
     parsedFormula = [""]
     parsedFormulaIndex = 0
+    preFormula = ""
 }
 
 function next (){

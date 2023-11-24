@@ -38,9 +38,7 @@ function read(event) {
             if (typeId(formula[i]) == 0) {
                 if (i == 0) 
                     continue
-                
                 operationPresent = true
-                break
             }   
         }
         let lastOperation = ""
@@ -378,8 +376,10 @@ function parse (formula) {
                 parsedFormula[parsedFormulaIndex] = "/";
             else if (formula[i] == "(" && i < (length - 1)) 
                 parsedFormula[parsedFormulaIndex] = "(";  
-            else if (formula[i] == "(" && length > 1 && i == (length - 1)) 
-                parsedFormula.pop()
+            else if (formula[i] == "(" && length > 1 && i == (length - 1)) {
+                parsedFormula = "ERROR"
+                return
+            }  
             else if (formula[i] == ")") 
                 parsedFormula[parsedFormulaIndex] = ")"; 
         } 
@@ -409,7 +409,6 @@ function parse (formula) {
         parsedFormula.push(")");
         sumRight++;
     }
-        
 }
 
 // Calculates the formula based on parsedFormula.

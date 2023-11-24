@@ -103,6 +103,7 @@ button {
     left: 20px;
     font-size: larger;
     background-color: rgb(211, 211, 211);
+    overflow-x: hidden;
 }
 
 li {

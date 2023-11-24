@@ -394,7 +394,7 @@ function parse (formula) {
                 parsedFormula[parsedFormulaIndex] = "/";
             else if (formula[i] == "(" && i < (length - 1)) 
                 parsedFormula[parsedFormulaIndex] = "(";  
-            else if (formula[i] == "(" && length > 1 && i == (length - 1)) {
+            else if (formula[i] == "(" && i == (length - 1)) {
                 parsedFormula = "ERROR"
                 return
             }  

@@ -4,74 +4,11 @@ let parsedFormulaIndex = 0
 let length = 0
 let lastId = -1
 
-let inputScreen = document.getElementById('display')
-inputScreen.addEventListener("keyup", function () {
-    formula = document.querySelector('#display').value
-    let length = formula.length
-    if (length != 0) {
-        if (formula[length - 1] == "="){
-            formula = formula.slice(0, (length - 1))
-            let preFormula = formula
-            parse(formula)
-            formula = calculate(parsedFormula)
-            formula = fancy(formula)
-            let postFormula = formula
-            if (preFormula != postFormula && formula != "ERROR") {
-                appendHistory(preFormula + "=")
-                appendHistory(postFormula)
-            }
-            if (formula == "0")
-                formula = ""
-        }
-
-        let operatorLast = false
-        for (let i = 0; i < length; i++) {
-            let unmodified = formula
-            if (operatorLast && typeId(formula[i]) == 0) 
-                formula = formula.slice(0, i - 1) + formula.slice(i)
-            if (typeId(formula[i]) == 404) {
-                if (i == (formula - 1))
-                    formula = formula.slice(0, i)
-                else
-                    formula = formula.slice(0, i) + formula.slice(i + 1);
-            }
-            else if (typeId(formula[i]) == 0) {
-                operatorLast = true
-                continue
-            }
-            else
-                operatorLast = false
-
-            if (unmodified != formula) {
-                length = formula.length
-                i = 0
-            }   
-        }
-
-        if (length == 1 && typeId(formula) == 404)
-            formula = ""
-        
-        formula = fancy(formula)
-        document.querySelector('#display').value = formula
-        if (formula[length - 1] == "\n")
-            lastId = typeId(formula[length - 2])
-        else
-            lastId = typeId(formula[length - 1])
-        reset()
-    }
-    
-})
-
-
-
 // trigger function that designates the formula set-up based on button input.
 function read(event) {
     let trigger = event.srcElement.innerHTML
     formula = document.querySelector('#display').value
     length = formula.length
-
-    if (formula == "")
-        formula = "0"
 
     if (length > 0)
         lastId = typeId(formula[length - 1])
@@ -101,8 +38,6 @@ function read(event) {
             appendHistory(preFormula + "=")
             appendHistory(postFormula)
         }
-        if (formula == "0")
-            formula = ""
     }
     else if (trigger == "+/-") {
         if (formula == "0")
@@ -292,7 +227,6 @@ function read(event) {
     reset()
 }
 
-
 function calcHistory(event) {
     let trigger = event.srcElement.innerHTML
     if (trigger == "🔍") {
@@ -328,6 +262,7 @@ function parse (formula) {
     for (let i = 0; i < length; i++) {
         if (typeId(formula[i]) == 1) {
             if (formula[i] == "%") {
+                next()
                 if (parsedFormula[parsedFormulaIndex - 1] == ")") {
                     parsedFormulaLen = parsedFormula.length;
                     let closedCount = 0;
@@ -368,10 +303,6 @@ function parse (formula) {
                 parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex] + formula[i];
             }
         } 
-        else if (typeId(formula[i]) == 404) {
-            parsedFormula = "ERROR"
-            return;
-        }
         else {
             next();
             if (formula[i] == "x" && i < (length - 1))
@@ -386,9 +317,8 @@ function parse (formula) {
                 parsedFormula[parsedFormulaIndex] = "/";
             else if (formula[i] == "(" && i < (length - 1)) 
                 parsedFormula[parsedFormulaIndex] = "(";  
-            else if (formula[i] == "(" && length > 1 && i == (length - 1)) {
-                parsedFormula.pop();
-            }
+            else if (formula[i] == "(" && length > 1 && i == (length - 1)) 
+                parsedFormula.pop()
             else if (formula[i] == ")") 
                 parsedFormula[parsedFormulaIndex] = ")"; 
         } 
@@ -457,8 +387,8 @@ function calculate (formula) {
     for (let i = 0; i < length; i++) {
         if ((formula[i] == "*" || formula[i] == "/") && i != (length - 1)) {
             let localCalc = 0;
-            let num1 = parseFloat(formula[i - 1])
-            let num2 = parseFloat(formula[i + 1])
+            let num1 = parseFloat(precision(formula[i - 1]))
+            let num2 = parseFloat(precision(formula[i + 1]))
             if (formula[i] == "*")
                 localCalc = num1 * num2;
             else {
@@ -478,7 +408,7 @@ function calculate (formula) {
     let sum = false;
     let sub = false;
     for (let i = 0; i < length; i++) {
-        let num = parseFloat(formula[i]);
+        let num = parseFloat(precision(formula[i]))
         if (!isNaN(num)) {
             if (sum || i == 0) {
                 calculation = calculation + num;
@@ -628,7 +558,7 @@ function typeId (value) {
                 if (value == operators[i])
                     return 0;
             }
-            return 404;
+            return -1;
         }
     }
     else
@@ -641,6 +571,7 @@ function fancy (formula) {
     if (formula[length - 1] == "\n") 
         formula = formula.slice(0, (length - 1));
 
+    length = formula.length;
     let unbrokenChars = 0;
     for (let i = 0; i < length; i++) {
         if (formula[i] != "\n")
@@ -662,7 +593,7 @@ function fancy (formula) {
     }
     
     
-
+    length = formula.length;
     let nonFancy = ""
     let newNumStartIndex = -1;
     let decIndex = -1;
@@ -707,15 +638,12 @@ function fancy (formula) {
         else
             formula = formula.slice(0, (newNumStartIndex + 1)) + fancy;
     }
-
-    if (formula == "0")
-        formula = ""
     return formula
 }
 
 // Resets the calculator
 function reset () {
-    formula = ""
+    formula = "0"
     parsedFormula = [""]
     parsedFormulaIndex = 0
 }

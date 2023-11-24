@@ -27,8 +27,9 @@
         <div id="calcAndHist">
             <form action="">
                 <div class="customBorder" id="calc">
+                    <button type="button" onclick="calcHistory(event)" id="showHistory">&#128269</button>
                     <div id="displayAndSideButtons">
-                        <textarea type="text" id="display" autofocus placeholder="0"></textarea>
+                        <textarea type="text" id="display" readonly>0</textarea>
                         <div>
                             <button type="button" onclick="read(event)" id="backspace">⌫</button>
                         </div>
@@ -127,7 +128,7 @@
                     </table>
                 </div>
             </form>
-            <button type="button" onclick="calcHistory(event)" id="showHistory">&#128269</button>
+            
             <div id="histContainer">
                 <div id="histTitle">
                     History

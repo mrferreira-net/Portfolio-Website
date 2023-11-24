@@ -265,16 +265,16 @@ function calcHistory(event) {
     let trigger = event.srcElement.innerHTML
     if (trigger == "🔍") {
         document.getElementById('histContainer').style.display = "block"
-        document.getElementById('showHistory').style.display = "none"
+        document.getElementById('calc').style.display = "none"
     }
-    else if (trigger == "-"){
-        document.getElementById('histContainer').style.display = "none"
-        document.getElementById('showHistory').style.display = "block"
+    else if (trigger == "Clear") {
+        let container = document.getElementById('listContainer')
+        while (container.childElementCount > 0) 
+            container.removeChild(container.children[0])
     }
     else {
-        let container = document.getElementById('histContainer')
-        while (container.childElementCount > 4) 
-            container.removeChild(container.children[4])
+        document.getElementById('histContainer').style.display = "none"
+        document.getElementById('calc').style.display = "block"
     }
     
 }
@@ -301,10 +301,10 @@ function appendHistory (string) {
     let list = document.createElement("li")
     let text = document.createTextNode(string)
     let button = document.createElement("button")
-    let container = document.getElementById('histContainer')
+    let container = document.getElementById('listContainer')
 
     button.setAttribute("id", "listedHistory")
-    button.setAttribute("onclick", "useHistory(event);buttonClick(event);")
+    button.setAttribute("onclick", "useHistory(event);buttonClick(event);calcHistory(event);")
 
     button.appendChild(text)
     list.appendChild(button)

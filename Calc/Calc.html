@@ -27,15 +27,14 @@
         <div id="calcAndHist">
             <form action="">
                 <div class="customBorder" id="calc">
-                    <button type="button" onclick="calcHistory(event);buttonClick(event);" id="showHistory">&#128269</button>
                     <div id="displayAndSideButtons">
                         <div>
                             <textarea type="text" id="display" readonly>0</textarea>
                             <textarea type="text" id="answerDisplay" readonly>= </textarea>
                         </div>
-                        
                         <div>
                             <button type="button" onclick="read(event);buttonClick(event);" id="backspace">⌫</button>
+                            <button type="button" onclick="calcHistory(event);buttonClick(event);" id="showHistory">&#128269</button>
                         </div>
                     </div>
                     <table>
@@ -132,15 +131,19 @@
                     </table>
                 </div>
             </form>
-            
-            <div id="histContainer">
+
+            <div id="histContainer" class="customBorder">
                 <div id="histTitle">
                     History
                 </div>
                 <button type="button" onclick="calcHistory(event);buttonClick(event);" id="hideHistory">-</button>
-                <button type="button" onclick="calcHistory(event);buttonClick(event);" id="clearHistory">C</button>
+                <button type="button" onclick="calcHistory(event);buttonClick(event);" id="clearHistory">Clear</button>
                 <br>
+                <div id="listContainer">
+                
+                </div>
             </div>
+            
         </div>
         <br>
         <br>

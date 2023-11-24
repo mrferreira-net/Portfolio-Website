@@ -101,7 +101,23 @@ button {
     overflow: scroll;
     left: 20px;
     font-size: larger;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(211, 211, 211);
+}
+
+li {
+    position: relative;
+    top: 20px;
+    margin-bottom: 2px;
+    list-style-type: none;
+    width: min-content;
+    height: min-content;
+}
+
+#listedHistory {
+    font-size: 30px;
+    height:min-content;
+    width: min-content;
+    border: 1px solid rgb(206, 206, 206);
 }
 
 #showHistory {
@@ -135,8 +151,9 @@ button {
 
 #histTitle {
     position: absolute;
-    font-size: larger;
+    font-size: 35px;
     font-weight: bold;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Arial Narrow', Arial, sans-serif;
     width: fit-content;
+    text-decoration: underline;
 }

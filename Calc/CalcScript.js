@@ -298,17 +298,35 @@ function preCalc (formula) {
 
 // Adds calculations to history container
 function appendHistory (string) {
-    let node = document.createElement("li")
-    let specNode = document.createTextNode(string)
-    node.appendChild(specNode)
-    document.getElementById('histContainer').appendChild(node)
+    let list = document.createElement("li")
+    let text = document.createTextNode(string)
+    let button = document.createElement("button")
+    let container = document.getElementById('histContainer')
+
+    button.setAttribute("id", "listedHistory")
+    button.setAttribute("onclick", "useHistory(event);buttonClick(event);")
+
+    button.appendChild(text)
+    list.appendChild(button)
+    container.appendChild(list)
+
+    
+}
+
+function useHistory (event) {
+    let trigger = event.srcElement.innerHTML
+    if (trigger[0] == "=")
+        formula = trigger.slice(1)
+    else
+        formula = trigger
+    document.querySelector('#display').value = formula
 }
 
 function buttonClick(event) {
     event.srcElement.style.backgroundColor = "rgb(143, 143, 143)";
     let changeColorBack = setInterval(function () {
         event.srcElement.style.backgroundColor = "rgb(255, 255, 255)";
-    }, 100);
+    }, 150);
 }
 
 //-------------------------------NON-MAIN FUNCTIONS-------------------------------
@@ -497,18 +515,23 @@ function precision(num) {
 
     // Counts number of digits after the decimal
     let dec = false;
+    let digitCount = 0;
     let decDigitCount = 0;
     let nonZeroDecDigitCount = 0;
     let nonZeroIndex = -1;
     let tempNum = "";
     let decIndex = -1;
     let eIndex = -1;
-    for (let i = 0; i < num.length; i++) {
+    let length = num.length
+
+    for (let i = 0; i < length; i++) {
         if (num[i] == ".") {
             dec = true;
             decIndex = i;
             continue;
         }
+        if (!isNaN(parseInt(num[i])))
+            digitCount++
         if (num[i] == "e") {
             eIndex = i;
             if (dec == false)
@@ -522,65 +545,50 @@ function precision(num) {
             if (nonZeroIndex != -1 && eIndex == -1)
                 nonZeroDecDigitCount++;  
         }
-            
-        if (decDigitCount == 11) {
-            if ((i + 1) > (num.length - 1)) 
+        if (decDigitCount == 11 && dec) {
+            if ((i + 1) > (length - 1)) 
                 tempNum = num;
             else
                 tempNum = num.slice(0, i + 1);
         }
     }
-    
+
+
     let eQuantity = "";
     if (eIndex != -1) {
         if (tempNum == "")
             tempNum = num.slice(0, eIndex)
         eQuantity = num.slice(eIndex);
-        let newVal = 0;
-        if (tempNum.slice(decIndex + 1).length > 3) 
-            newVal = tempNum.slice((decIndex + 1), (decIndex + 4));
-        else if (tempNum.slice(decIndex + 1).length == 3)
-            newVal = tempNum.slice(decIndex + 1);
-        else
-            return tempNum + eQuantity;
-
-        if (parseInt(newVal[newVal.length - 1]) > 4) 
-            newVal = parseInt(newVal.slice(0, 2)) + 1;
-        else
-            newVal = parseInt(newVal.slice(0, 2));
-        newVal = newVal.toString();
-
-        tempNum = tempNum.slice(0, (decIndex + 1));
-        if (newVal.length > 2) {
-            newVal = ""
-            if (tempNum[0] == "-")
-                tempNum = parseInt(tempNum) - 1;
-            else
-                tempNum = parseInt(tempNum) + 1;
-                tempNum = tempNum.toString();
-        }
-        else
-            num = tempNum.slice(0, decIndex + 1) + newVal.toString() + eQuantity;
-        num = tempNum + newVal + eQuantity;
-        return num;
     }   
+
+    
+    
+    
+
+    if (decIndex != -1) {
+        if (eIndex != -1) {
+            if (tempNum.slice(decIndex + 1, eIndex).length < 11)
+                return (tempNum + eQuantity)
+        }
+        else if (tempNum.slice(decIndex + 1).length < 11) 
+            return tempNum
+    }
+    
     
     if (tempNum != "") {
         if (parseInt(tempNum[tempNum.length - 1]) > 4){
-            let newVal = 0;
-            let preRoundLen = 0;
-            let postRoundLen = 0;
-            if (nonZeroIndex == (tempNum.length - 1)) 
-                newVal = tempNum.slice(nonZeroIndex - 1);
-            else 
-                newVal = tempNum.slice(nonZeroIndex, (tempNum.length - 1));
+            let newVal = tempNum.slice(nonZeroIndex)
+            let preRoundLen = 0
+            let postRoundLen = 0
+            tempNum = tempNum.slice(0, (decIndex + 1))
+            
             preRoundLen = newVal.length;
             newVal = parseInt(newVal) + 1;
             newVal = newVal.toString();
             postRoundLen = newVal.length;
     
-            tempNum = tempNum.slice(0, (decIndex + 1));
-            if (newVal.length > 10) {
+            
+            if (newVal.length > 11) {
                 newVal = "";
                 if (tempNum[0] == "-")
                     tempNum = parseInt(tempNum) - 1;
@@ -599,42 +607,36 @@ function precision(num) {
             num = tempNum + newVal + eQuantity;
         }   
         else 
-            num = parseFloat(tempNum.slice(0, (tempNum.length - 1)));
+            num = parseFloat(tempNum.slice(0, (tempNum.length - 1))) + eQuantity;
         num = num.toString();
     }
 
-    let length = num.length
-    decIndex = -1
-    let digitCount = 0
-    for (let i = 0; i < length; i++) {
-        if (!isNaN(parseInt(num[i])))
-            digitCount++
-        else if (num[i] == ".")
-            decIndex = i
-    }
-    if (decIndex != -1 && digitCount > 15) {
+
+    if (decIndex != -1 && digitCount > 15 && eIndex == -1) {
         let i = length - 1
         while (digitCount > 15) {
             if (!isNaN(parseInt(num[i]))) {
                 num = num.slice(0, (length - 1))
-                digitCount--;
+                length --
+                digitCount--
             }
             else if (num[i] == ".")
                 break;
             i--
         }
     }
-    if (digitCount > 15) {
+
+    if (digitCount > 15 && eIndex == -1) {
         let negSign = false
         if (num[0] == "-") {
             negSign = true
             num = num.slice(1)
         }
-        num = num.slice(0, 4)
-        if (num[3] > 4) 
-            num = parseInt(num.slice(0, 3)) + 1;
+        num = num.slice(0, 10)
+        if (num[9] > 4) 
+            num = parseInt(num.slice(0, 9)) + 1;
         else 
-            num = parseInt(num.slice(0, 3))
+            num = parseInt(num.slice(0, 9))
         num = num.toString()
         num = num.slice(0, 1) + "." + num.slice(1) + "e+" + (digitCount - 1).toString()
         if (negSign == true)

@@ -1,4 +1,4 @@
-let formula = ""
+let formula = "0"
 let length = 0
 let lastId = -1
 let preFormula = ""
@@ -107,7 +107,6 @@ function read(event) {
             }
         }
     }
-    
     else if (trigger == "( )") {
         let sumLeft = 0;
         let sumRight = 0;
@@ -427,7 +426,7 @@ function parse (formula) {
             else if (formula[i] == ")") 
                 parsedFormula[parsedFormulaIndex] = ")";
             else if (i == (length - 1)) {
-                return parsedFormula.slice(0, parsedFormulaIndex)
+                return "ERROR"
             }  
         } 
     }
@@ -659,8 +658,6 @@ function precision(num) {
 // Returns 0 if value is a mathematical operator 1 if it's a number and -1 if it's neither.
 function typeId (value) {
     if (value != undefined) {
-        if (value == "+/-")
-            return lastId;
         if (!isNaN(parseFloat(value)) || value == "%" || value == "." || value == "," || value == "e")
             return 1;
         else if (value == ")" || value == "(")

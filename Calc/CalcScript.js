@@ -575,8 +575,6 @@ function precision(num) {
             decIndex = i;
             continue;
         }
-        if (!isNaN(parseInt(num[i])))
-            digitCount++
         if (num[i] == "e") {
             eIndex = i;
             if (dec == false)
@@ -634,10 +632,15 @@ function precision(num) {
             num = tempNum + newVal + eQuantity;
         }   
         else 
-            num = parseFloat(tempNum.slice(0, (tempNum.length - 1))) + eQuantity;
-        num = num.toString();
+            num = tempNum.slice(0, (tempNum.length - 1)) + eQuantity;
     }
 
+
+
+    for (let i = 0; i < length; i++) {
+        if (!isNaN(parseInt(num[i])))
+            digitCount++
+    }
     if (decIndex != -1 && digitCount > 15 && eIndex == -1) {
         let i = length - 1
         while (digitCount > 15) {
@@ -651,7 +654,6 @@ function precision(num) {
             i--
         }
     }
-
     if (digitCount > 15 && eIndex == -1) {
         let negSign = false
         if (num[0] == "-") {

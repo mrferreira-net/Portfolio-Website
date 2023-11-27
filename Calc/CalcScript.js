@@ -1,6 +1,4 @@
 let formula = ""
-let parsedFormula = [""]
-let parsedFormulaIndex = 0
 let length = 0
 let lastId = -1
 let preFormula = ""
@@ -13,7 +11,7 @@ function read(event) {
     if (length > 0)
         lastId = typeId(formula[length - 1])
 
-    if (trigger == "C") 
+    if (trigger == "C")
         reset()
     else if (trigger == "⌫") {
         if (formula == "ERROR" || formula == "Infinity" || formula == "-Infinity")
@@ -45,16 +43,17 @@ function read(event) {
         if (operationPresent == false) {
             let preFormulaLen = preFormula.length
             for (let i = preFormulaLen - 1; i >= 0; i--) {
-                if (typeId(preFormula[i]) == 0) {
-                    lastOperation = preFormula.slice(i)
-                    break
+                if (i > 0) {
+                    if (typeId(preFormula[i]) == 0 && preFormula[i - 1] != "e") {
+                        lastOperation = preFormula.slice(i)
+                        break
+                    }
                 }
             }
             formula = formula + lastOperation
         }
         preFormula = formula
-        parse(formula)
-        formula = calculate(parsedFormula)
+        formula = calculate(parse(formula))
         formula = fancy(formula)
         let postFormula = formula
         if (preFormula != postFormula && formula != "ERROR") {
@@ -285,8 +284,7 @@ function preCalc (formula) {
         formula = ""
     else {
         length = formula.length
-        parse(formula)
-        formula = calculate(parsedFormula)
+        formula = calculate(parse(formula))
         formula = fancy(formula)
     }
     if (formula == "ERROR")
@@ -335,11 +333,32 @@ function buttonClick(event) {
 
 // Parses the formula to be later solved.
 function parse (formula) {
+    let parsedFormula = [""]
+    let parsedFormulaIndex = 0
+    function next () {
+        if (parsedFormula[parsedFormulaIndex] != "") {
+            parsedFormula.push("");
+            parsedFormulaIndex++;
+        }
+    }
     let parsedFormulaLen = parsedFormula.length;
     let length = formula.length
     for (let i = 0; i < length; i++) {
         if (typeId(formula[i]) == 1) {
             if (formula[i] == "%") {
+                let percentageOfFormula = ""
+                let percentageOperatorIndex = -1
+                for (let j = i; j >= 0; j--) {
+                    if (typeId(formula[j]) == 0) {
+                        if (formula[j] == "+" || formula[j] == "-")
+                            percentageOperatorIndex = j
+                        else
+                            break
+                    }         
+                }
+                for (let j = 0; j < percentageOperatorIndex; j++) 
+                    percentageOfFormula = percentageOfFormula + formula[j]
+                percentageOfFormula = calculate(parse(percentageOfFormula))
                 next()
                 if (parsedFormula[parsedFormulaIndex - 1] == ")") {
                     parsedFormulaLen = parsedFormula.length;
@@ -367,6 +386,12 @@ function parse (formula) {
                 parsedFormula[parsedFormulaIndex] = "100";
                 next();
                 parsedFormula[parsedFormulaIndex] = ")";
+                if (percentageOperatorIndex != -1) {
+                    next()
+                    parsedFormula[parsedFormulaIndex] = "*";
+                    next()
+                    parsedFormula[parsedFormulaIndex] = percentageOfFormula;
+                }
             }
             else if (formula[i] == ",") 
                 continue;
@@ -398,8 +423,7 @@ function parse (formula) {
             else if (formula[i] == ")") 
                 parsedFormula[parsedFormulaIndex] = ")";
             else if (i == (length - 1)) {
-                parsedFormula = "ERROR"
-                return
+                return parsedFormula.slice(0, parsedFormulaIndex)
             }  
         } 
     }
@@ -428,6 +452,7 @@ function parse (formula) {
         parsedFormula.push(")");
         sumRight++;
     }
+    return parsedFormula
 }
 
 // Calculates the formula based on parsedFormula.
@@ -731,14 +756,5 @@ function fancy (formula) {
 // Resets the calculator
 function reset () {
     formula = "0"
-    parsedFormula = [""]
-    parsedFormulaIndex = 0
     preFormula = ""
-}
-
-function next (){
-    if (parsedFormula[parsedFormulaIndex] != "") {
-        parsedFormula.push("");
-        parsedFormulaIndex++;
-    }
 }

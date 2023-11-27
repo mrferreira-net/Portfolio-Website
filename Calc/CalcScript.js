@@ -279,19 +279,33 @@ function calcHistory(event) {
 
 // Automatically shows a preview of the current calculation being typed
 function preCalc (formula) {
-    if (formula == "=") 
-        formula = ""
-    else {
-        length = formula.length
-        formula = calculate(parse(formula))
-        formula = fancy(formula)
+    let operationPresent = false;
+    for (let i = 0; i < length; i++) {
+        if (formula[i] == "e") {
+            i++
+            continue
+        }
+        if (typeId(formula[i]) == 0 || formula[i] == "%") {
+            if (i == 0) 
+                continue
+            operationPresent = true
+        }   
     }
-    if (formula == "ERROR")
-        formula = ""
-    document.querySelector('#answerDisplay').value = "= " + formula
-    formula = "0"
-    parsedFormula = [""]
-    parsedFormulaIndex = 0
+    if (operationPresent || formula == "=") {
+        if (formula == "=") 
+            formula = ""
+        else {
+            length = formula.length
+            formula = calculate(parse(formula))
+            formula = fancy(formula)
+        }
+        if (formula == "ERROR")
+            formula = ""
+        document.querySelector('#answerDisplay').value = "= " + formula
+        formula = "0"
+        parsedFormula = [""]
+        parsedFormulaIndex = 0
+    }
 }
 
 // Adds calculations to history container
@@ -359,8 +373,10 @@ function parse (formula) {
                     else if (formula[j] == "(")
                         break         
                 }
-                for (let j = 0; j < percentageOperatorIndex; j++) 
-                    percentageOfFormula = percentageOfFormula + formula[j]
+                for (let j = 0; j < percentageOperatorIndex; j++) {
+                    if (formula[j] != "\n")
+                        percentageOfFormula = percentageOfFormula + formula[j]
+                }
                 percentageOfFormula = calculate(parse(percentageOfFormula))
                 next()
                 if (parsedFormula[parsedFormulaIndex - 1] == ")") {
@@ -396,7 +412,7 @@ function parse (formula) {
                     parsedFormula[parsedFormulaIndex] = percentageOfFormula;
                 }
             }
-            else if (formula[i] == ",") 
+            else if (formula[i] == "," || formula[i] == "\n") 
                 continue;
             else if (formula[i] == "e") {
                 parsedFormula[parsedFormulaIndex] = parsedFormula[parsedFormulaIndex] + "e" + formula[i + 1];
@@ -690,7 +706,7 @@ function fancy (formula) {
         else
             unbrokenChars = 0;
 
-        if (unbrokenChars > 22) {
+        if (unbrokenChars > 20) {
             for (let j = i; j >= 0; j--) {
                 if (typeId(formula[j]) == 0 || formula[j] == "(" || formula[j] == ")") {
                     if (j != 0) {

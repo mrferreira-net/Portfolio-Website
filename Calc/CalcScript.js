@@ -354,7 +354,9 @@ function parse (formula) {
                             percentageOperatorIndex = j
                         else
                             break
-                    }         
+                    }
+                    else if (formula[j] == "(")
+                        break         
                 }
                 for (let j = 0; j < percentageOperatorIndex; j++) 
                     percentageOfFormula = percentageOfFormula + formula[j]

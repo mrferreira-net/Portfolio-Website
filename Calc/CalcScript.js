@@ -350,8 +350,10 @@ function parse (formula) {
                 let percentageOperatorIndex = -1
                 for (let j = i; j >= 0; j--) {
                     if (typeId(formula[j]) == 0) {
-                        if (formula[j] == "+" || formula[j] == "-")
+                        if (formula[j] == "+" || formula[j] == "-") {
                             percentageOperatorIndex = j
+                            break
+                        }    
                         else
                             break
                     }

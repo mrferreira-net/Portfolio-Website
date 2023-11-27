@@ -405,7 +405,7 @@ function parse (formula) {
                 parsedFormula[parsedFormulaIndex] = "100";
                 next();
                 parsedFormula[parsedFormulaIndex] = ")";
-                if (percentageOperatorIndex != -1) {
+                if (percentageOperatorIndex != -1 && percentageOfFormula != "ERROR") {
                     next()
                     parsedFormula[parsedFormulaIndex] = "*";
                     next()

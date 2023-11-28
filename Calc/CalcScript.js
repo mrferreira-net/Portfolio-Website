@@ -291,16 +291,11 @@ function calcHistory(event) {
             container.removeChild(container.children[0])
     }
     else {
-        let formula = document.querySelector('#display').value
         if (trigger[0] == "=")
             trigger = trigger.slice(1)
-
         let triggerLen = trigger.length
         for (let i = 0; i < triggerLen; i++)
             read(trigger[i])
-         //formula = formula + trigger
-         //document.querySelector('#display').value = formula
-         //preCalc(formula)
     }
 }
 

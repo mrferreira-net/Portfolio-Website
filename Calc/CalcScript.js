@@ -1,16 +1,21 @@
-let formula = "0"
-let length = 0
-let lastId = -1
-let preFormula = ""
-let histShow = false
+let lastTrigger = ""
+let modifiedOutput = undefined
 
 // trigger function that designates the formula set-up based on button input.
 function read(event) {
     let trigger = event.srcElement.innerHTML
-    formula = document.querySelector('#display').value
-    length = formula.length
-    if (length > 0)
-        lastId = typeId(formula[length - 1])
+    let formula = document.querySelector('#display').value
+    let length = formula.length
+    function reset() {
+        lastTrigger = ""
+        modifiedOutput = undefined
+        formula = "0"
+    }
+    if (trigger != "=" && modifiedOutput == false)
+        modifiedOutput = true
+    else if (trigger != "=" && modifiedOutput == true)
+        modifiedOutput = undefined
+
 
     if (trigger == "C")
         reset()
@@ -40,20 +45,25 @@ function read(event) {
                 operationPresent = true
             }   
         }
-        let lastOperation = ""
-        if (operationPresent == false) {
-            let preFormulaLen = preFormula.length
-            for (let i = preFormulaLen - 1; i >= 0; i--) {
-                if (i > 0) {
-                    if (typeId(preFormula[i]) == 0 && preFormula[i - 1] != "e") {
-                        lastOperation = preFormula.slice(i)
-                        break
+        if (operationPresent)
+            modifiedOutput = false
+        let historyIndex = document.getElementById("listContainer").childElementCount - 2
+        if (historyIndex >= 0 && modifiedOutput == false) {
+            let lastOperation = document.getElementById("listContainer").children[historyIndex].children[0].innerHTML
+            if (operationPresent == false) {
+                let lastOperationLen = lastOperation.length
+                for (let i = lastOperationLen - 1; i >= 0; i--) {
+                    if (i > 0) {
+                        if (typeId(lastOperation[i]) == 0 && lastOperation[i - 1] != "e") {
+                            lastOperation = lastOperation.slice(i)
+                            break
+                        }
                     }
                 }
+                formula = formula + lastOperation
             }
-            formula = formula + lastOperation
         }
-        preFormula = formula
+        let preFormula = formula
         formula = calculate(parse(formula))
         formula = fancy(formula)
         let postFormula = formula
@@ -125,30 +135,32 @@ function read(event) {
             formula = formula.slice(0, length - 1) + "x(";
         else if (formula[length - 1] == "." && sumRight < sumLeft)
             formula = formula.slice(0, length - 1) + ")";
-        else if (lastId != 0 && sumLeft == sumRight)
+        else if (typeId(lastTrigger) != 0 && sumLeft == sumRight)
             formula = formula + "x(";
-        else if (lastId == 0 && sumLeft == sumRight)
+        else if (typeId(lastTrigger) == 0 && sumLeft == sumRight)
             formula = formula + "(";
-        else if (lastId == 1)
+        else if (typeId(lastTrigger) == 1)
             formula = formula + ")";
-        else if (lastId == -1) {
+        else if (typeId(lastTrigger) == -1) {
             if (formula[length - 1] == ")")
                 formula = formula + ")";
             else
                 formula = formula + "(";
         }
-        else if (lastId == 0) {
+        else if (typeId(lastTrigger) == 0) {
             formula = formula + "(";
         }  
     }
     else if (trigger == "%") {
         if (formula[length - 1] == ".")
             formula = formula.slice(0, (length - 1)) + trigger;
-        if (length != 0 && lastId != 0 && formula[length - 1] != "%" && formula[length - 1] != "(")
+        if (length != 0 && typeId(lastTrigger) != 0 && formula[length - 1] != "%" && formula[length - 1] != "(")
             formula = formula + "%";
     }
     else if (trigger == ".") {
-        if (lastId == 1 && formula[length - 1] != "%") {
+        if (modifiedOutput == true)
+            reset()
+        if (typeId(lastTrigger) == 1 && formula[length - 1] != "%") {
             for (let i = length - 1; i >= 0; i--) {
                 if (formula[i] == ".")
                     break;
@@ -169,15 +181,15 @@ function read(event) {
         else if (formula[length - 1] == ")" || formula[length - 1] == "%")
             formula = formula + "x0.";
         else if (formula[length - 1] != ".")
-            formula = formula + "0.";
+            formula = formula + ".";
     }
     else if (typeId(trigger) == 0) {
         if (formula[length - 1] == "(") {
             formula = formula;
-            if (lastId == -1 && length > 0 && trigger == "-")
+            if (typeId(lastTrigger) == -1 && length > 0 && trigger == "-")
                 formula = formula + trigger;
         }
-        else if (lastId == 0) {
+        else if (typeId(lastTrigger) == 0) {
             if ((trigger == "+" || trigger == "-") && formula[length - 2] == "(") {
                 if (trigger == "+" && formula[length - 1] == "-")
                     formula = formula.slice(0, (length - 1));
@@ -201,9 +213,11 @@ function read(event) {
     else if (typeId(trigger) == 1 && length > 1 && (formula[length - 1] == "%" || formula[length - 1] == ")"))
         formula = formula + "x" + trigger
     else if (typeId(trigger) == 1){
+        if (modifiedOutput == true)
+            reset()
         if (formula == "0" || formula == "ERROR")
             formula = trigger;
-        else if (lastId == 0 && trigger == "0")
+        else if (typeId(lastTrigger) == 0 && trigger == "0")
             formula = formula + trigger;
         else {
             let naturalNumOrDecimal = false;
@@ -246,17 +260,13 @@ function read(event) {
         }
     }
     
-    
     formula = fancy(formula)
     document.querySelector('#display').value = formula
-    if (formula[length - 1] == "\n")
-        lastId = typeId(formula[length - 2])
-    else
-        lastId = typeId(formula[length - 1])
     if (trigger == "=" || trigger == "C" || formula == "0")
         preCalc("=")
     else
         preCalc(formula)
+    lastTrigger = trigger
 }
 
 // History container button functionalities
@@ -318,7 +328,8 @@ function appendHistory (string) {
     let container = document.getElementById('listContainer')
 
     button.setAttribute("id", "listedHistory")
-    button.setAttribute("onclick", "buttonClick(event);useHistory(event);")
+    button.setAttribute("onclick", "buttonClick(event);useHistory(event)")
+    button.setAttribute("type", "button")
 
     button.appendChild(text)
     list.appendChild(button)
@@ -785,8 +796,3 @@ function fancy (formula) {
     return formula
 }
 
-// Resets the calculator
-function reset () {
-    formula = "0"
-    preFormula = ""
-}

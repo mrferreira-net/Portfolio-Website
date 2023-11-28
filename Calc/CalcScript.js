@@ -2,7 +2,11 @@
 let lastTrigger = ""
 let modifiedOutput = undefined
 function read(event) {
-    let trigger = event.srcElement.innerHTML
+    let trigger = ""
+    if (event.srcElement == undefined) 
+        trigger = event
+    else
+        trigger = event.srcElement.innerHTML
     let formula = document.querySelector('#display').value
     let length = formula.length
     function reset() {
@@ -44,7 +48,7 @@ function read(event) {
                 operationPresent = true
             }   
         }
-        if (operationPresent)
+        if (operationPresent) 
             modifiedOutput = false
         let historyIndex = document.getElementById("listContainer").childElementCount - 2
         if (historyIndex >= 0 && modifiedOutput == false) {
@@ -69,7 +73,7 @@ function read(event) {
         if (preFormula != postFormula && formula != "ERROR") {
             appendHistory(preFormula)
             appendHistory("=" + postFormula)
-        }
+        }  
     }
     else if (trigger == "+/-") {
         if (formula == "0")
@@ -117,7 +121,7 @@ function read(event) {
             }
         }
     }
-    else if (trigger == "( )") {
+    else if (trigger == "( )" || trigger == "(" || trigger == ")") {
         let sumLeft = 0;
         let sumRight = 0;
 
@@ -134,19 +138,19 @@ function read(event) {
             formula = formula.slice(0, length - 1) + "x(";
         else if (formula[length - 1] == "." && sumRight < sumLeft)
             formula = formula.slice(0, length - 1) + ")";
-        else if (typeId(lastTrigger) != 0 && sumLeft == sumRight)
+        else if (typeId(formula[length - 1]) != 0 && sumLeft == sumRight)
             formula = formula + "x(";
-        else if (typeId(lastTrigger) == 0 && sumLeft == sumRight)
+        else if (typeId(formula[length - 1]) == 0 && sumLeft == sumRight)
             formula = formula + "(";
-        else if (typeId(lastTrigger) == 1)
+        else if (typeId(formula[length - 1]) == 1)
             formula = formula + ")";
-        else if (typeId(lastTrigger) == -1) {
+        else if (typeId(formula[length - 1]) == -1) {
             if (formula[length - 1] == ")")
                 formula = formula + ")";
             else
                 formula = formula + "(";
         }
-        else if (typeId(lastTrigger) == 0) {
+        else if (typeId(formula[length - 1]) == 0) {
             formula = formula + "(";
         }  
     }
@@ -290,39 +294,46 @@ function calcHistory(event) {
         let formula = document.querySelector('#display').value
         if (trigger[0] == "=")
             trigger = trigger.slice(1)
-        document.querySelector('#display').value = formula + trigger
+
+        let triggerLen = trigger.length
+        for (let i = 0; i < triggerLen; i++)
+            read(trigger[i])
+         //formula = formula + trigger
+         //document.querySelector('#display').value = formula
+         //preCalc(formula)
     }
 }
 
 // Automatically shows a preview of the current calculation being typed
 function preCalc (formula) {
     let operationPresent = false;
-    for (let i = 0; i < length; i++) {
-        if (formula[i] == "e") {
-            i++
-            continue
-        }
-        if (typeId(formula[i]) == 0 || formula[i] == "%") {
-            if (i == 0) 
+    let length = formula.length
+    if (formula == "=") 
+        formula = ""
+    else {
+        for (let i = 0; i < length; i++) {
+            if (formula[i] == "e") {
+                i++
                 continue
-            operationPresent = true
-        }   
-    }
-    if (operationPresent || formula == "=") {
-        if (formula == "=") 
-            formula = ""
-        else {
-            length = formula.length
-            formula = calculate(parse(formula))
-            formula = fancy(formula)
+            }
+            if (typeId(formula[i]) == 0) {
+                if (i == 0) 
+                    continue
+                operationPresent = true
+            }  
+            else if (formula[i] == "%" || formula[i] == "(")
+                operationPresent = true
         }
+    }
+    if (operationPresent) { 
+        formula = calculate(parse(formula))
+        formula = fancy(formula)
         if (formula == "ERROR")
             formula = ""
-        document.querySelector('#answerDisplay').value = "= " + formula
-        formula = "0"
-        parsedFormula = [""]
-        parsedFormulaIndex = 0
     }
+    else
+        formula = ""
+    document.querySelector('#answerDisplay').value = "= " + formula
 }
 
 // Adds calculations to history container

@@ -287,9 +287,10 @@ function calcHistory(event) {
             container.removeChild(container.children[0])
     }
     else {
+        let formula = document.querySelector('#display').value
         if (trigger[0] == "=")
             trigger = trigger.slice(1)
-        document.querySelector('#display').value = trigger
+        document.querySelector('#display').value = formula + trigger
     }
 }
 

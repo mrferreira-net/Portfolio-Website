@@ -1,7 +1,6 @@
+// trigger function that designates the formula set-up based on button input.
 let lastTrigger = ""
 let modifiedOutput = undefined
-
-// trigger function that designates the formula set-up based on button input.
 function read(event) {
     let trigger = event.srcElement.innerHTML
     let formula = document.querySelector('#display').value
@@ -286,7 +285,12 @@ function calcHistory(event) {
         let container = document.getElementById('listContainer')
         while (container.childElementCount > 0) 
             container.removeChild(container.children[0])
-    }  
+    }
+    else {
+        if (trigger[0] == "=")
+            trigger = trigger.slice(1)
+        document.querySelector('#display').value = trigger
+    }
 }
 
 // Automatically shows a preview of the current calculation being typed
@@ -328,7 +332,7 @@ function appendHistory (string) {
     let container = document.getElementById('listContainer')
 
     button.setAttribute("id", "listedHistory")
-    button.setAttribute("onclick", "buttonClick(event);useHistory(event)")
+    button.setAttribute("onclick", "buttonClick(event);calcHistory(event)")
     button.setAttribute("type", "button")
 
     button.appendChild(text)
@@ -338,24 +342,12 @@ function appendHistory (string) {
     container.scrollTop = container.scrollHeight
 }
 
-function useHistory (event) {
-    let trigger = event.srcElement.innerHTML
-    if (trigger[0] == "=")
-        formula = trigger.slice(1)
-    else
-        formula = trigger
-    document.querySelector('#display').value = formula
-}
-
 function buttonClick(event) {
     event.srcElement.style.backgroundColor = "rgb(143, 143, 143)";
     let changeColorBack = setInterval(function () {
         event.srcElement.style.backgroundColor = "rgb(255, 255, 255)";
     }, 150);
 }
-
-//-------------------------------NON-MAIN FUNCTIONS-------------------------------
-
 
 // Parses the formula to be later solved.
 function parse (formula) {
@@ -702,20 +694,14 @@ function typeId (value) {
     if (value != undefined) {
         if (!isNaN(parseFloat(value)) || value == "%" || value == "." || value == "," || value == "e")
             return 1;
-        else if (value == ")" || value == "(")
-            return -1
-        else {
-            let operators = ["x", "+", "-", "÷", "/"]
-            let operatorsLen = operators.length;
-            for (let i = 0; i < operatorsLen; i++) {
-                if (value == operators[i])
-                    return 0;
-            }
-            return -1;
-        }
     }
-    else
-        return -1;
+    let operators = ["x", "+", "-", "÷", "/"]
+    let operatorsLen = operators.length;
+    for (let i = 0; i < operatorsLen; i++) {
+        if (value == operators[i])
+            return 0;
+    }
+    return -1;
 }
 
 // Adds commas for every 3 integer digits, adds line breaks
@@ -795,4 +781,3 @@ function fancy (formula) {
     }
     return formula
 }
-

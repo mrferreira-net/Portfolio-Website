@@ -24,20 +24,20 @@
                 <img alt="siteIcon" src="Documents/icon.png" id="siteIcon">
             </a>
         </div>
-        <div id="calcAndHist">
-            <form action="">
-                <div class="customBorder" id="calc">
-                    <div id="displayAndSideButtons">
-                        <div>
-                            <textarea type="text" id="display" readonly>0</textarea>
-                            <textarea type="text" id="answerDisplay" readonly>= </textarea>
-                        </div>
-                        <div>
-                            <button type="button" onclick="read(event);buttonClick(event);" id="backspace">⌫</button>
-                            <button type="button" onclick="calcHistory(event);buttonClick(event);" id="showHistory">&#128269</button>
-                        </div>
+        <form action="">
+            <div class="customBorder" id="calc">
+                <div id="displayAndSideButtons">
+                    <div>
+                        <textarea type="text" id="display" readonly>0</textarea>
+                        <textarea type="text" id="answerDisplay" readonly>= </textarea>
                     </div>
-                    <table> 
+                    <div>
+                        <button type="button" onclick="read(event);buttonClick(event);" id="backspace">⌫</button>
+                        <button type="button" onclick="calcHistory(event);buttonClick(event);" id="showHistory">Hist</button>
+                    </div>
+                </div>
+                <div id="buttonContainer">
+                    <table id="numPad"> 
                         <tr>
                             <td>
                                 <button type="button" onclick="read(event);buttonClick(event);">C</button>
@@ -129,22 +129,20 @@
                             </td>
                         </tr>
                     </table>
-                </div>
-            </form>
-            <div id="histContainer" class="customBorder">
-                <div id="histTitle">
-                    History
-                </div>
-                <button type="button" onclick="calcHistory(event);buttonClick(event);" id="hideHistory">-</button>
-                <button type="button" onclick="calcHistory(event);buttonClick(event);" id="clearHistory">Clear</button>
-                <br>
-                <div id="listContainer">
+                    <div id="histContainer" class="customBorder">
+                        <div id="histTitle">
+                            History
+                        </div>
+                        <button type="button" onclick="calcHistory(event);buttonClick(event);" id="clearHistory">Clear</button>
+                        <br>
+                        <div id="listContainer">
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
         <br>
         <br>
-
         <div id="footnote">
             Made by <a href="https://mr-ferreira.com" target="_blank">Matheus 
                 Ferreira</a>

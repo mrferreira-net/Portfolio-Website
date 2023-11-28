@@ -7,10 +7,6 @@ body {
     padding: 10px;
     background-color: rgb(89, 95, 92);
 }
-table {
-    position: relative;
-    padding: 10px;
-}
 button {
     background-color: rgb(255, 255, 255);
     width: 80px;
@@ -28,14 +24,15 @@ button {
     display: block;
     position: relative;
     text-align: center;
-    width: 410px;
-    height: auto;
+    max-width: 410px;
+    min-width: 410px;
+    min-height: 585px;
+    max-height: 585px;
     margin: auto;
 }
 ::placeholder {
     color: black;
 }
-
 #display {
     text-wrap: nowrap;
     bottom: 10px;
@@ -48,7 +45,6 @@ button {
     border-bottom: none;
     font-family: Arial, Helvetica, sans-serif;
 }
-
 #answerDisplay {
     position: relative;
     text-wrap: nowrap;
@@ -63,7 +59,6 @@ button {
     font-family: Arial, Helvetica, sans-serif;
     bottom: 4px;
 }
-
 #footnote {
     position: relative;
     bottom: 0;
@@ -79,31 +74,12 @@ button {
 }
 #backspace {
     position: relative;
-    bottom: 29px;
-    left: 2px;
-    width: 50px;
-    height: 50px;
+    bottom: 39px;
+    left: 4px;
+    width: 60px;
+    height: 40px;
     font-size: 20px;
 }
-
-#calcAndHist {
-    display: flex;
-    margin: auto;
-    width: min-content;
-}
-
-#histContainer {
-    display: none;
-    position: relative;
-    width: 410px;
-    padding: 5px;
-    height: 613px;
-    overflow: scroll;
-    font-size: larger;
-    background-color: rgb(211, 211, 211);
-    overflow-x: hidden;
-}
-
 li {
     position: relative;
     top: 20px;
@@ -112,46 +88,48 @@ li {
     width: min-content;
     height: min-content;
 }
-
 #listedHistory {
     font-size: 20px;
     height:min-content;
     width: min-content;
     border: 1px solid rgb(255, 255, 255);
 }
-
 #showHistory {
     display: block;
     position: relative;
-    width: 50px;
-    height: 50px;
-    top: 21px;
-    font-size: 20px;
-}
-
-#hideHistory {
-    position: absolute;
-    right: 5px;
-    width: 40px;
+    width: 60px;
     height: 40px;
-    font-size: 25px;
-    font-weight: bolder;
-    font-family:'Courier New', Courier, monospace;
+    top: 30px;
+    left: 4px;
+    font-size: 21px;
 }
-
+#numPad {
+    position: relative;
+    left: 25px;
+}
 #clearHistory {
     position: absolute;
-    left: 120px;
+    right: 10px;
     width: 83px;
-    height: 40px;
-    font-size: 25px;
+    height: 33px;
+    font-size: 20px;
 }
-
 #histTitle {
     position: absolute;
-    font-size: 35px;
+    font-size: 27px;
     font-weight: bold;
     font-family: 'Arial Narrow', Arial, sans-serif;
     width: fit-content;
     text-decoration: underline;
+}
+#histContainer {
+    display: none;
+    position: relative;
+    left: 25px;
+    width: 320px;
+    height: 400px;
+    overflow: scroll;
+    font-size: larger;
+    background-color: rgb(211, 211, 211);
+    overflow-x: hidden;
 }

@@ -2,6 +2,7 @@ let formula = "0"
 let length = 0
 let lastId = -1
 let preFormula = ""
+let histShow = false
 
 // trigger function that designates the formula set-up based on button input.
 function read(event) {
@@ -261,20 +262,21 @@ function read(event) {
 // History container button functionalities
 function calcHistory(event) {
     let trigger = event.srcElement.innerHTML
-    if (trigger == "🔍") {
+    if (trigger == "Hist") {
         document.getElementById('histContainer').style.display = "block"
-        document.getElementById('calc').style.display = "none"
+        document.getElementById('numPad').style.display = "none"
+        document.getElementById("showHistory").innerHTML = "+/-"
+    }
+    else if (trigger == "+/-") {
+        document.getElementById('histContainer').style.display = "none"
+        document.getElementById('numPad').style.display = "block"
+        document.getElementById("showHistory").innerHTML = "Hist"
     }
     else if (trigger == "Clear") {
         let container = document.getElementById('listContainer')
         while (container.childElementCount > 0) 
             container.removeChild(container.children[0])
-    }
-    else {
-        document.getElementById('histContainer').style.display = "none"
-        document.getElementById('calc').style.display = "block"
-    }
-    
+    }  
 }
 
 // Automatically shows a preview of the current calculation being typed
@@ -316,7 +318,7 @@ function appendHistory (string) {
     let container = document.getElementById('listContainer')
 
     button.setAttribute("id", "listedHistory")
-    button.setAttribute("onclick", "useHistory(event);buttonClick(event);calcHistory(event);")
+    button.setAttribute("onclick", "buttonClick(event);useHistory(event);")
 
     button.appendChild(text)
     list.appendChild(button)
@@ -361,23 +363,36 @@ function parse (formula) {
             if (formula[i] == "%") {
                 let percentageOfFormula = ""
                 let percentageOperatorIndex = -1
-                for (let j = i; j >= 0; j--) {
-                    if (typeId(formula[j]) == 0) {
+                let closedCount = 0
+                for (let j = i - 1; j >= 0; j--) {
+                    if (typeId(formula[j]) == 0 && percentageOperatorIndex == -1) {
                         if (formula[j] == "+" || formula[j] == "-") {
                             percentageOperatorIndex = j
+                            if (formula[j] == "-" && j > 0){
+                                if (formula[j - 1] == "(")
+                                    percentageOperatorIndex = -1
+                            }
+                        }    
+                        else {
+                            percentageOperatorIndex = -1
                             break
                         }    
-                        else
-                            break
                     }
-                    else if (formula[j] == "(")
-                        break         
+                    else if (formula[j] == "(" && closedCount == 0)
+                        break
+                    else if ((formula[j] == "(" && closedCount > 0))
+                        closedCount--
+                    else if (formula[j] == ")")
+                        closedCount++
+                    if (formula[j] != "\n" && percentageOperatorIndex != -1 && percentageOperatorIndex > j)
+                        percentageOfFormula = formula[j] + percentageOfFormula
                 }
-                for (let j = 0; j < percentageOperatorIndex; j++) {
-                    if (formula[j] != "\n")
-                        percentageOfFormula = percentageOfFormula + formula[j]
+                if (i < length - 1) {
+                    if (formula[i + 1] == "x" || formula[i + 1] == "÷")
+                        percentageOperatorIndex = -1
                 }
-                percentageOfFormula = calculate(parse(percentageOfFormula))
+                if (percentageOperatorIndex != -1)
+                    percentageOfFormula = calculate(parse(percentageOfFormula))
                 next()
                 if (parsedFormula[parsedFormulaIndex - 1] == ")") {
                     parsedFormulaLen = parsedFormula.length;
@@ -434,8 +449,6 @@ function parse (formula) {
             else if (formula[i] == "-" && i < (length - 1)) 
                 parsedFormula[parsedFormulaIndex] = "-";
             else if (formula[i] == "÷" && i < (length - 1))
-                parsedFormula[parsedFormulaIndex] = "/";
-            else if (formula[i] == "/" && i < (length - 1))
                 parsedFormula[parsedFormulaIndex] = "/";
             else if (formula[i] == "(" && i < (length - 1)) 
                 parsedFormula[parsedFormulaIndex] = "(";  

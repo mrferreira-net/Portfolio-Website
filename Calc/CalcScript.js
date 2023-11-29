@@ -163,7 +163,7 @@ function read(event) {
     else if (trigger == ".") {
         if (modifiedOutput == true)
             reset()
-        if (typeId(lastTrigger) == 1 && formula[length - 1] != "%") {
+        if (typeId(formula[length - 1]) == 1 && formula[length - 1] != "%") {
             for (let i = length - 1; i >= 0; i--) {
                 if (formula[i] == ".")
                     break;
@@ -181,6 +181,8 @@ function read(event) {
                 }
             }
         }
+        else if (typeId(formula[length - 1]) == 0)
+            formula = formula + "0.";
         else if (formula[length - 1] == ")" || formula[length - 1] == "%")
             formula = formula + "x0.";
         else if (formula[length - 1] != ".")

@@ -351,6 +351,7 @@ function appendHistory (string) {
     container.scrollTop = container.scrollHeight
 }
 
+// Animates buttons when clicked
 function buttonClick(event) {
     event.srcElement.style.backgroundColor = "rgb(143, 143, 143)";
     let changeColorBack = setInterval(function () {
@@ -377,28 +378,45 @@ function parse (formula) {
                 let percentageOperatorIndex = -1
                 let closedCount = 0
                 for (let j = i - 1; j >= 0; j--) {
-                    if (typeId(formula[j]) == 0 && percentageOperatorIndex == -1) {
-                        if (formula[j] == "+" || formula[j] == "-") {
-                            percentageOperatorIndex = j
-                            if (formula[j] == "-" && j > 0){
-                                if (formula[j - 1] == "(")
-                                    percentageOperatorIndex = -1
-                            }
-                        }    
-                        else {
-                            percentageOperatorIndex = -1
-                            break
-                        }    
-                    }
-                    else if (formula[j] == "(" && closedCount == 0)
-                        break
-                    else if ((formula[j] == "(" && closedCount > 0))
-                        closedCount--
-                    else if (formula[j] == ")")
+                    if (j == (i - 1) && formula[j] == ")") {
+                        percentageOperatorIndex = "pendingOpen"
                         closedCount++
-                    if (formula[j] != "\n" && percentageOperatorIndex != -1 && percentageOperatorIndex > j)
-                        percentageOfFormula = formula[j] + percentageOfFormula
+                        continue
+                    } 
+                    if (percentageOperatorIndex == "pendingOpen"){
+                        if (closedCount == 0)
+                            percentageOperatorIndex = -1
+                        else if ((formula[j] == "(" && closedCount > 0))
+                            closedCount--
+                        else if (formula[j] == ")")
+                            closedCount++
+                    }
+                    if (percentageOperatorIndex != "pendingOpen"){
+                        if (typeId(formula[j]) == 0 && percentageOperatorIndex == -1) {
+                            if (formula[j] == "+" || formula[j] == "-") {
+                                percentageOperatorIndex = j
+                                if (formula[j] == "-" && j > 0){
+                                    if (formula[j - 1] == "(")
+                                        percentageOperatorIndex = -1
+                                }
+                            }    
+                            else {
+                                percentageOperatorIndex = -1
+                                break
+                            }    
+                        }
+                        else if (formula[j] == "(" && closedCount == 0)
+                            break
+                        else if ((formula[j] == "(" && closedCount > 0))
+                            closedCount--
+                        else if (formula[j] == ")")
+                            closedCount++
+                        if (formula[j] != "\n" && percentageOperatorIndex != -1 && percentageOperatorIndex > j)
+                            percentageOfFormula = formula[j] + percentageOfFormula
+                    }
                 }
+                if (percentageOperatorIndex == "pendingOpen")
+                    percentageOperatorIndex = -1
                 if (i < length - 1) {
                     if (formula[i + 1] == "x" || formula[i + 1] == "÷")
                         percentageOperatorIndex = -1

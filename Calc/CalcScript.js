@@ -1,6 +1,8 @@
 // trigger function that designates the formula set-up based on button input.
 let lastTrigger = ""
 let modifiedOutput = undefined
+let lastOperation = ""
+
 function read(event) {
     let trigger = ""
     if (event.srcElement == undefined) 
@@ -13,6 +15,7 @@ function read(event) {
         lastTrigger = ""
         modifiedOutput = undefined
         formula = "0"
+        lastOperation = ""
     }
     if (trigger != "=" && modifiedOutput == false)
         modifiedOutput = true
@@ -48,32 +51,36 @@ function read(event) {
                 operationPresent = true
             }   
         }
-        if (operationPresent) 
+        if (operationPresent) {
             modifiedOutput = false
-        let historyIndex = document.getElementById("listContainer").childElementCount - 2
-        if (historyIndex >= 0 && modifiedOutput == false) {
-            let lastOperation = document.getElementById("listContainer").children[historyIndex].children[0].innerHTML
-            if (operationPresent == false) {
-                let lastOperationLen = lastOperation.length
-                for (let i = lastOperationLen - 1; i >= 0; i--) {
-                    if (i > 0) {
-                        if (typeId(lastOperation[i]) == 0 && lastOperation[i - 1] != "e") {
-                            lastOperation = lastOperation.slice(i)
-                            break
-                        }
+            lastOperation = formula
+        }
+        if (operationPresent == false && modifiedOutput == false) {
+            let lastOperationLen = lastOperation.length
+            for (let i = lastOperationLen - 1; i >= 0; i--) {
+                if (i > 0) {
+                    if (typeId(lastOperation[i]) == 0 && lastOperation[i - 1] != "e") {
+                        lastOperation = lastOperation.slice(i)
+                        break
                     }
                 }
-                formula = formula + lastOperation
             }
+            formula = formula + lastOperation
         }
         let preFormula = formula
         formula = calculate(parse(formula))
         formula = fancy(formula)
         let postFormula = formula
         if (preFormula != postFormula && formula != "ERROR") {
-            appendHistory(preFormula)
-            appendHistory("=" + postFormula)
-        }  
+            let historyIndex = document.getElementById("listContainer").childElementCount - 2
+            let lastHistOperation = ""
+            if (historyIndex >= 0)
+                lastHistOperation = document.getElementById("listContainer").children[historyIndex].children[0].innerHTML
+            if (lastHistOperation != preFormula) {
+                appendHistory(preFormula)
+                appendHistory("=" + postFormula)
+            }
+        }
     }
     else if (trigger == "+/-") {
         if (formula == "0")

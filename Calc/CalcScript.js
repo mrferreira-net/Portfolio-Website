@@ -56,12 +56,21 @@ function read(event) {
         }
         if (operationPresent == false && modifiedOutput == false) {
             let lastOperationLen = lastOperation.length
-            for (let i = lastOperationLen - 1; i >= 0; i--) {
-                if (i > 0) {
-                    if (typeId(lastOperation[i]) == 0 && lastOperation[i - 1] != "e") {
+            let closedCount = 0
+            for (let i = lastOperationLen - 1; i > 0; i--) {
+                if (lastOperation[lastOperationLen - 1] == ")" || lastOperation.slice(lastOperationLen - 2) == ")%") {
+                    if (lastOperation[i] == ")")
+                        closedCount++
+                    else if (lastOperation[i] == "(")
+                        closedCount--
+                    if (typeId(lastOperation[i]) == 0 && lastOperation[i - 1] != "e" && closedCount == 0) {
                         lastOperation = lastOperation.slice(i)
                         break
                     }
+                }
+                else if (typeId(lastOperation[i]) == 0 && lastOperation[i - 1] != "e") {
+                    lastOperation = lastOperation.slice(i)
+                    break
                 }
             }
             formula = formula + lastOperation
@@ -705,7 +714,7 @@ function precision(num) {
     }
     if (digitCount > 15 && eIndex == -1) {
         let negSign = false
-        if (num[0] == "‑") {
+        if (num[0] == "-") {
             negSign = true
             num = num.slice(1)
         }
@@ -717,18 +726,18 @@ function precision(num) {
         num = num.toString()
         num = num.slice(0, 1) + "." + num.slice(1) + "e+" + (digitCount - 1).toString()
         if (negSign == true)
-            num = "‑" + num
+            num = "-" + num
     }
     return num;
 }
 
-// Returns 0 if value is a mathematical operator 1 if it's a number and -1 if it's neither.
+// Returns 0 if value is a mathematical operator, 1 if it's a number/misc syntax, and -1 if it's neither.
 function typeId (value) {
     if (value != undefined) {
         if (!isNaN(parseFloat(value)) || value == "%" || value == "." || value == "," || value == "e")
             return 1;
     }
-    let operators = ["x", "+", "‑", "÷", "/"]
+    let operators = ["x", "+", "‑", "÷", "/", "-"]
     let operatorsLen = operators.length;
     for (let i = 0; i < operatorsLen; i++) {
         if (value == operators[i])

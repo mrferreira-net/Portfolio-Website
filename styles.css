@@ -2,6 +2,7 @@ body {
     background-color: rgb(54, 53, 53);
     color: white;
     padding: 10px;
+    caret-color: transparent;
 }
 a {
     color: rgb(129, 213, 219);

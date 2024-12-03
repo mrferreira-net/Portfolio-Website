@@ -50,13 +50,7 @@ a {
     color: rgb(255, 255, 255);
     background-color: rgb(65, 65, 65);
 }
-#cardRow {
-    display: flex;
-}
 #projectCard {
-    position: relative;
-    max-width: 320px;
-    max-height: 600px;
     margin: 3px;
 }
 #profilePic2 {

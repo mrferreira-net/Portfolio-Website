@@ -31,22 +31,15 @@ a {
     padding-right: 50px;
 }
 /*--------------------------------------------------------------------------------------*/
-#resumeContainer {
-    text-align: center;
-}
-#resume {
-    position: relative;
-    top: 20px;
-    overflow: scroll;
-    width: 840px;
-    height: 1110px;
-    border: none;
+#pcbCard {
     margin: auto;
-    display: block;
+    text-align: center;
+    width: 700px;
+    background-color: rgb(61, 61, 61);
 }
-#resumeLink {
-    position: relative;
-    bottom: 60px;
+#pcbPic {
+    margin: 20px;
+    width: 90%;
 }
 /*--------------------------------------------------------------------------------------*/
 #bottomPageLine {

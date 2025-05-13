@@ -37,14 +37,14 @@ a {
 #resume {
     position: relative;
     top: 20px;
-    overflow: scroll;
     width: 840px;
-    height: 1110px;
+    height: 1300px;
     border: none;
     margin: auto;
     display: block;
 }
 #resumeLink {
+    height: 50px;
     position: relative;
     bottom: 60px;
 }
